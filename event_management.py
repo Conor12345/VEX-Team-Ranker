@@ -9,24 +9,24 @@ def check_event_presence(EventID):
     db.commit()
     return len(results.fetchall()) == 1
 
-def import_event(query):
-    data = api_query.get_event_data(query)
-    if not data:
+def import_event(query): # Loads event data base upon a query such as "Country=United Kingdom&season=Turning Point"
+    data = api_query.get_event_data(query) # Query the API using a function
+    if not data: # Ensures the API has returned some data
         return False
     else:
-        db = sqlite3.connect("database.db")
+        db = sqlite3.connect("database.db") # Loading database
         c = db.cursor()
-        for event in data:
-            if not check_event_presence(event["sku"]):
+        for event in data: # Checks each event return by database query
+            if not check_event_presence(event["sku"]): # Checks if the event is already present in the event database
                 c.execute("INSERT INTO tblEvents VALUES (?, ?, ?, ?, ?, ?)", (event["sku"], event["name"], event["loc_city"], event["loc_postcode"], event["season"], event["start"][0:10]))
                 db.commit()
-                match_management.import_match(event["sku"])
+                match_management.import_match(event["sku"]) # Passes the EventID to the match import function to import all matches which took place at the event
             else:
-                refresh_event(event["sku"])
+                refresh_event(event["sku"]) # Updates the data if it is already in the database
 
-def refresh_event(EventID):
+def refresh_event(EventID): # Updates the data for the specified event
     db = sqlite3.connect("database.db")
     c = db.cursor()
-    c.execute('DELETE FROM tblEvents WHERE EventID = (?)', (EventID,))
+    c.execute('DELETE FROM tblEvents WHERE EventID = (?)', (EventID,)) # Removes the event from the database
     db.commit()
-    import_event("sku=" + EventID)
+    import_event("sku=" + EventID) # Imports the event as if it was never present
