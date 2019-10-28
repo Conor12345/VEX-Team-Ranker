@@ -23,7 +23,7 @@ def verify_password(stored_password, provided_password):
     pwdhash = binascii.hexlify(pwdhash).decode('ascii')
     return pwdhash == stored_password
 
-def create_user(UserName: str, Password: str, TeamNum: str, Admin: int):
+def create_user(UserName: str, Password: str, TeamNum: str, Admin: bool):
     PassW = hash_password(Password)
 
     if Admin: # converts true,false to 1,0
