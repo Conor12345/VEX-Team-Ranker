@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="66c5b813-e995-4074-ba2a-13f8181abb37" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -227,7 +226,8 @@
       <workItem from="1572282450948" duration="51000" />
       <workItem from="1572296079546" duration="599000" />
       <workItem from="1572297622050" duration="423000" />
-      <workItem from="1572363434020" duration="740000" />
+      <workItem from="1572363434020" duration="827000" />
+      <workItem from="1572365031389" duration="26000" />
     </task>
     <task id="LOCAL-00001" summary="update user create">
       <created>1572261817130</created>
@@ -285,7 +285,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572281861883</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="cleanup">
+      <created>1572364249841</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1572364249842</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

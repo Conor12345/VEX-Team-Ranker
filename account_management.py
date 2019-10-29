@@ -23,20 +23,15 @@ def verify_password(stored_password, provided_password):
     pwdhash = binascii.hexlify(pwdhash).decode('ascii')
     return pwdhash == stored_password
 
-def create_user(UserName: str, Password: str, TeamNum: str, Admin: bool):
+def create_user(UserName: str, Password: str, TeamNum: str, Admin: int):
     PassW = hash_password(Password)
-
-    if Admin: # converts true,false to 1,0
-        Adm = 1
-    else:
-        Adm = 0
 
     if not team_management.check_team_presence(TeamNum): # Checks to see if the team is already in tblTeams
         team_management.import_team(TeamNum) # IF not in table, add team to table
 
     db = sqlite3.connect("database.db")
     c = db.cursor()
-    c.execute('INSERT INTO tblUsers (UserName, Password, TeamNum, Admin) VALUES (?, ?, ?, ?)'   ,(UserName, PassW, TeamNum, Adm))
+    c.execute('INSERT INTO tblUsers (UserName, Password, TeamNum, Admin) VALUES (?, ?, ?, ?)'   ,(UserName, PassW, TeamNum, Admin))
     db.commit()
 
 def get_user_data(UserName):
