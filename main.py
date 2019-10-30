@@ -44,7 +44,7 @@ class Login(tk.Frame):
         passLabel = tk.Label(self, text="Password:", font=("Verdanaet", 24))
         passLabel.place(relx=0.2, rely=0.55, anchor="center")
 
-        self.passBox = tk.Entry(self, width=20, font=("Verdana", 24))
+        self.passBox = tk.Entry(self, width=20, font=("Verdana", 24), show="*")
         self.passBox.place(relx=0.5, rely=0.55, anchor="center")
 
         self.submitButton = tk.Button(self, text="Submit", command=self.submitLogin, font=("Verdana", 24))
@@ -56,7 +56,8 @@ class Login(tk.Frame):
         if account_management.verify_user_login(self.userBox.get(), self.passBox.get()):
             print("login succesful")
         else:
-            print("login failed")
+            errorMsg = tk.Label(self, text="ERROR - Login Unsuccessful", font=("Verdana", 18))
+            errorMsg.place(relx=0.5, rely=0.8, anchor="center")
 
 
 app = Main()
