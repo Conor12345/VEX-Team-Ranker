@@ -47,7 +47,10 @@ def get_user_data(UserName):
 
 def verify_user_login(UserName, Password):
     user = get_user_data(UserName)
-    return verify_password(user[2], Password)
+    if not user:
+        return False
+    else:
+        return verify_password(user[2], Password)
 
 def update_user_password(UserName, NewPassword):
     db = sqlite3.connect("database.db")
