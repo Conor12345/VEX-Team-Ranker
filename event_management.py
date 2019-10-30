@@ -28,5 +28,6 @@ def refresh_event(EventID): # Updates the data for the specified event
     db = sqlite3.connect("database.db")
     c = db.cursor()
     c.execute('DELETE FROM tblEvents WHERE EventID = (?)', (EventID,)) # Removes the event from the database
+    c.execute('DELETE FROM tblMatches WHERE EventID = (?)', (EventID,))
     db.commit()
     import_event("sku=" + EventID) # Imports the event as if it was never present
