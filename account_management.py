@@ -52,6 +52,28 @@ def verify_user_login(UserName, Password):
 def update_user_password(UserName, NewPassword):
     db = sqlite3.connect("database.db")
     c = db.cursor()
-
     c.execute('UPDATE tblUsers set Password=? where UserName=?', (hash_password(NewPassword), UserName))
     db.commit()
+
+def update_user_data(CurrentUserName, NewUserName=None, NewTeamNum=None, NewAdmin=None):
+    if NewUserName is not None:
+        db = sqlite3.connect("database.db")
+        c = db.cursor()
+        c.execute('UPDATE tblUsers set UserName=? where UserName=?', (NewUserName, CurrentUserName))
+        db.commit()
+
+    elif NewTeamNum is not None:
+        if team_management.check_team_presence(NewTeamNum):
+            team_management.refresh_team(NewTeamNum)
+        else:
+            team_management.import_team(NewTeamNum)
+        db = sqlite3.connect("database.db")
+        c = db.cursor()
+        c.execute('UPDATE tblUsers set TeamNum=? where UserName=?', (NewTeamNum, CurrentUserName))
+        db.commit()
+
+    elif NewAdmin is not None:
+        db = sqlite3.connect("database.db")
+        c = db.cursor()
+        c.execute('UPDATE tblUsers set Admin=? where UserName=?', (NewAdmin, CurrentUserName))
+        db.commit()
