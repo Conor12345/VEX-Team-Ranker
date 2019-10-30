@@ -41,7 +41,7 @@ class Login(tk.Frame):
         self.userBox = tk.Entry(self, width=20, font=("Verdana", 24))
         self.userBox.place(relx=0.5, rely=0.45, anchor="center")
 
-        passLabel = tk.Label(self, text="Password:", font=("Verdana", 24))
+        passLabel = tk.Label(self, text="Password:", font=("Verdanaet", 24))
         passLabel.place(relx=0.2, rely=0.55, anchor="center")
 
         self.passBox = tk.Entry(self, width=20, font=("Verdana", 24))
@@ -51,7 +51,6 @@ class Login(tk.Frame):
         self.submitButton.place(relx=0.5, rely=0.7, anchor="center")
 
         self.userBox.focus()
-        self.controller.bind("<Return>", self.submitLogin())
 
     def submitLogin(self):
         if account_management.verify_user_login(self.userBox.get(), self.passBox.get()):

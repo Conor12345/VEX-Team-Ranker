@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66c5b813-e995-4074-ba2a-13f8181abb37" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/account_management.py" beforeDir="false" afterPath="$PROJECT_DIR$/account_management.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -282,7 +282,7 @@
       <workItem from="1572431708627" duration="3742000" />
       <workItem from="1572455119234" duration="3000" />
       <workItem from="1572455430826" duration="1867000" />
-      <workItem from="1572472455963" duration="2718000" />
+      <workItem from="1572472455963" duration="2982000" />
     </task>
     <task id="LOCAL-00001" summary="update user create">
       <created>1572261817130</created>
@@ -396,7 +396,21 @@
       <option name="project" value="LOCAL" />
       <updated>1572475125360</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="fixed verify_user_login for username not present">
+      <created>1572475267008</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1572475267008</updated>
+    </task>
+    <task id="LOCAL-00018" summary="added git ignore">
+      <created>1572475396818</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1572475396818</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -428,10 +442,12 @@
     <MESSAGE value="updated refresh_event to remove old matches" />
     <MESSAGE value="refreshed data" />
     <MESSAGE value="created login GUI" />
-    <option name="LAST_COMMIT_MESSAGE" value="created login GUI" />
+    <MESSAGE value="fixed verify_user_login for username not present" />
+    <MESSAGE value="added git ignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="added git ignore" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CSProject$main.coverage" NAME="main Coverage Results" MODIFIED="1572475207770" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CSProject$main.coverage" NAME="main Coverage Results" MODIFIED="1572475509340" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSProject$event_management.coverage" NAME="event_management Coverage Results" MODIFIED="1572456008254" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSProject$team_management.coverage" NAME="team_management Coverage Results" MODIFIED="1572433055344" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSProject$test.coverage" NAME="test Coverage Results" MODIFIED="1572434688146" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
