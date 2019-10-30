@@ -44,3 +44,14 @@ def get_user_data(UserName):
         return False
     else:
         return list(result[0])
+
+def verify_user_login(UserName, Password):
+    user = get_user_data(UserName)
+    return verify_password(user[2], Password)
+
+def update_user_password(UserName, NewPassword):
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+
+    c.execute('UPDATE tblUsers set Password=? where UserName=?', (hash_password(NewPassword), UserName))
+    db.commit()
