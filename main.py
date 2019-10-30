@@ -1,4 +1,5 @@
 import tkinter as tk
+import account_management
 
 class Main(tk.Tk):
     def __init__(self):
@@ -30,6 +31,34 @@ class Login(tk.Frame):
     def __init__(self, parent, controller):
         self.controller = controller
         tk.Frame.__init__(self, parent)
+
+        titleLabel = tk.Label(self, text="Login", font=("Verdana", 48))
+        titleLabel.place(relx=0.5, rely=0.25, anchor="center")
+
+        userLabel = tk.Label(self, text="Username:", font=("Verdana", 24))
+        userLabel.place(relx=0.2, rely=0.45, anchor="center")
+
+        self.userBox = tk.Entry(self, width=20, font=("Verdana", 24))
+        self.userBox.place(relx=0.5, rely=0.45, anchor="center")
+
+        passLabel = tk.Label(self, text="Password:", font=("Verdana", 24))
+        passLabel.place(relx=0.2, rely=0.55, anchor="center")
+
+        self.passBox = tk.Entry(self, width=20, font=("Verdana", 24))
+        self.passBox.place(relx=0.5, rely=0.55, anchor="center")
+
+        self.submitButton = tk.Button(self, text="Submit", command=self.submitLogin, font=("Verdana", 24))
+        self.submitButton.place(relx=0.5, rely=0.7, anchor="center")
+
+        self.userBox.focus()
+        self.controller.bind("<Return>", self.submitLogin())
+
+    def submitLogin(self):
+        if account_management.verify_user_login(self.userBox.get(), self.passBox.get()):
+            print("login succesful")
+        else:
+            print("login failed")
+
 
 app = Main()
 app.mainloop()
