@@ -14,7 +14,7 @@ class Main(tk.Tk):
 
         self.frames = {}
 
-        for F in [Login]:
+        for F in [Login, Home]:
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -54,11 +54,15 @@ class Login(tk.Frame):
 
     def submitLogin(self):
         if account_management.verify_user_login(self.userBox.get(), self.passBox.get()):
-            print("login succesful")
+            print("login sucess")
         else:
             errorMsg = tk.Label(self, text="ERROR - Login Unsuccessful", font=("Verdana", 18))
             errorMsg.place(relx=0.5, rely=0.8, anchor="center")
 
+class Home(tk.Frame):
+    def __init__(self, parent, controller):
+        self.controller = controller
+        tk.Frame.__init__(self, parent)
 
 app = Main()
 app.mainloop()
