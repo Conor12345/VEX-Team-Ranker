@@ -55,6 +55,7 @@ class Login(tk.Frame):
     def submitLogin(self):
         if account_management.verify_user_login(self.userBox.get(), self.passBox.get()):
             print("login sucess")
+            self.controller.show_frame(Home)
         else:
             errorMsg = tk.Label(self, text="ERROR - Login Unsuccessful", font=("Verdana", 18))
             errorMsg.place(relx=0.5, rely=0.8, anchor="center")
@@ -63,6 +64,16 @@ class Home(tk.Frame):
     def __init__(self, parent, controller):
         self.controller = controller
         tk.Frame.__init__(self, parent)
+
+        # -=+=- Navigation Bar -=+=-- #
+        self.homeButton = tk.Button(self, text="Home", font=("Verdana", 24))
+        self.homeButton.place(relx=0.025, rely=0.025)
+
+        self.databaseButton = tk.Button(self, text="Database", font=("Verdana", 24))
+        self.databaseButton.place(relx=0.2, rely=0.025)
+
+        self.resultsButton = tk.Button(self, text="Results", font=("Verdana", 24))
+        self.resultsButton.place(relx=0.4, rely=0.025)
 
 app = Main()
 app.mainloop()
