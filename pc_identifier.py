@@ -4,7 +4,7 @@ def getRes():
         pc = line
 
     if pc == "Desktop":
-        geom = "1280x720+-1600+100"
+        geom = "1920x1080+-1920+0"
     elif pc == "Laptop":
-        geom = "1280x720+300+150"
+        geom = "1920x1080+0+0"
     return geom

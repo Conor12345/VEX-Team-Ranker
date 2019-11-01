@@ -45,24 +45,31 @@ class Login(tk.Frame):
         titleLabel = tk.Label(self, text="Login", font=("Verdana", 48))
         titleLabel.place(relx=0.5, rely=0.25, anchor="center")
 
-        userLabel = tk.Label(self, text="Username:", font=("Verdana", 24))
-        userLabel.place(relx=0.2, rely=0.45, anchor="center")
+        userLabel = tk.Label(self, text="Username:", font=("Verdana", 20))
+        userLabel.place(relx=0.3, rely=0.45, anchor="center")
 
-        self.userBox = tk.Entry(self, width=20, font=("Verdana", 24))
+        self.userBox = tk.Entry(self, width=20, font=("Verdana", 20))
         self.userBox.place(relx=0.5, rely=0.45, anchor="center")
 
-        passLabel = tk.Label(self, text="Password:", font=("Verdanaet", 24))
-        passLabel.place(relx=0.2, rely=0.55, anchor="center")
+        passLabel = tk.Label(self, text=" Password:", font=("Verdana", 20))
+        passLabel.place(relx=0.3, rely=0.55, anchor="center")
 
-        self.passBox = tk.Entry(self, width=20, font=("Verdana", 24), show="*")
+        self.passBox = tk.Entry(self, width=20, font=("Verdana", 20), show="*")
         self.passBox.place(relx=0.5, rely=0.55, anchor="center")
 
-        self.submitButton = tk.Button(self, text="Submit", command=self.submitLogin, font=("Verdana", 24))
+        self.submitButton = tk.Button(self, text="Submit", command=self.submitLogin, font=("Verdana", 20))
         self.submitButton.place(relx=0.5, rely=0.7, anchor="center")
 
         self.userBox.focus()
 
+        self.loginBypass = tk.Button(self, text="Skip Login", command=self.submitLogin, font=("Verdana", 20))
+        self.loginBypass.place(relx=0.05, rely=0.05)
+
     def submitLogin(self):
+        if self.userBox.get() + self.passBox.get() == "":
+            self.userBox.insert(0, "Admin")
+            self.passBox.insert(0, "12345")
+
         if account_management.verify_user_login(self.userBox.get(), self.passBox.get()):
             self.controller.login_success(self.userBox.get())
             self.controller.show_frame(Home)
@@ -76,14 +83,15 @@ class Home(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         # -=+=- Navigation Bar -=+=-- #
-        self.homeButton = tk.Button(self, text="Home", font=("Verdana", 24))
+        self.homeButton = tk.Button(self, text="Home", font=("Verdana", 20))
         self.homeButton.place(relx=0.025, rely=0.025)
 
-        self.databaseButton = tk.Button(self, text="Database", font=("Verdana", 24))
+        self.databaseButton = tk.Button(self, text="Database", font=("Verdana", 20))
         self.databaseButton.place(relx=0.15, rely=0.025)
 
-        self.resultsButton = tk.Button(self, text="Results", font=("Verdana", 24))
+        self.resultsButton = tk.Button(self, text="Results", font=("Verdana", 20))
         self.resultsButton.place(relx=0.3, rely=0.025)
 
 app = Main()
+app.state("zoomed")
 app.mainloop()
