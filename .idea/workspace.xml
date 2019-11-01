@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="66c5b813-e995-4074-ba2a-13f8181abb37" name="Default Changelist" comment="updated user login gui to include error msg">
+    <list default="true" id="66c5b813-e995-4074-ba2a-13f8181abb37" name="Default Changelist" comment="changed window location">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/CSProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CSProject.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <list id="c294ea68-1f31-44d2-b7f7-21fc52e2b868" name="No change" comment="No change" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -97,9 +98,12 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Conor\PycharmProjects\CSProject" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Conor\PycharmProjects\CSProject\" />
       <recent name="$PROJECT_DIR$/" />
@@ -249,11 +253,6 @@
               <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
               <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@2b463618" type="7427dc5b:ServiceModel$ServiceGroupNode" />
             </path>
-            <path>
-              <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@2b463618" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-              <item name="com.intellij.execution.services.ServiceModel$ServiceNode@42f28c89" type="9fbbdea:ServiceModel$ServiceNode" />
-            </path>
           </expand>
           <select />
         </treeState>
@@ -261,7 +260,7 @@
     </option>
   </component>
   <component name="SvnConfiguration">
-    <configuration />
+    <configuration>C:\Users\Conor\AppData\Roaming\Subversion</configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -294,7 +293,7 @@
       <workItem from="1572525288604" duration="940000" />
       <workItem from="1572555269908" duration="491000" />
       <workItem from="1572557708027" duration="285000" />
-      <workItem from="1572558416748" duration="3825000" />
+      <workItem from="1572558416748" duration="4812000" />
     </task>
     <task id="LOCAL-00001" summary="update user create">
       <created>1572261817130</created>
@@ -471,7 +470,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572525864925</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="changed window location">
+      <created>1572569413554</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1572569413554</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -512,7 +518,8 @@
     <MESSAGE value="updated user login gui to include error msg" />
     <MESSAGE value="Added Home screen" />
     <MESSAGE value="Started nav bar" />
-    <option name="LAST_COMMIT_MESSAGE" value="Started nav bar" />
+    <MESSAGE value="changed window location" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed window location" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/CSProject$main.coverage" NAME="main Coverage Results" MODIFIED="1572558745992" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
