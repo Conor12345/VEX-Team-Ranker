@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="66c5b813-e995-4074-ba2a-13f8181abb37" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+    <list default="true" id="66c5b813-e995-4074-ba2a-13f8181abb37" name="Default Changelist" comment="updated user login gui to include error msg">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
+    <list id="c294ea68-1f31-44d2-b7f7-21fc52e2b868" name="No change" comment="No change" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,6 +101,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Conor\PycharmProjects\CSProject\" />
       <recent name="$PROJECT_DIR$/" />
       <recent name="$PROJECT_DIR$/projectPracticeStuff2" />
       <recent name="$PROJECT_DIR$/ProjectPracticeStuff2" />
@@ -116,7 +119,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.test">
+  <component name="RunManager" selected="Python.main">
     <configuration name="account_management" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="CSProject" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -229,8 +232,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.test" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.test" />
         <item itemvalue="Python.event_management" />
         <item itemvalue="Python.account_management" />
         <item itemvalue="Python.team_management" />
@@ -244,12 +247,12 @@
           <expand>
             <path>
               <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@3f521c91" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@2b463618" type="7427dc5b:ServiceModel$ServiceGroupNode" />
             </path>
             <path>
               <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@3f521c91" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-              <item name="com.intellij.execution.services.ServiceModel$ServiceNode@33283f9a" type="9fbbdea:ServiceModel$ServiceNode" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@2b463618" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceNode@42f28c89" type="9fbbdea:ServiceModel$ServiceNode" />
             </path>
           </expand>
           <select />
@@ -263,6 +266,7 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="66c5b813-e995-4074-ba2a-13f8181abb37" name="Default Changelist" comment="" />
+      <changelist id="c294ea68-1f31-44d2-b7f7-21fc52e2b868" name="No change" comment="" />
       <created>1571048362028</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -282,7 +286,15 @@
       <workItem from="1572431708627" duration="3742000" />
       <workItem from="1572455119234" duration="3000" />
       <workItem from="1572455430826" duration="1867000" />
-      <workItem from="1572472455963" duration="3899000" />
+      <workItem from="1572472455963" duration="4032000" />
+      <workItem from="1572476505936" duration="162000" />
+      <workItem from="1572476681672" duration="858000" />
+      <workItem from="1572521459369" duration="1298000" />
+      <workItem from="1572523770883" duration="330000" />
+      <workItem from="1572525288604" duration="940000" />
+      <workItem from="1572555269908" duration="491000" />
+      <workItem from="1572557708027" duration="285000" />
+      <workItem from="1572558416748" duration="3825000" />
     </task>
     <task id="LOCAL-00001" summary="update user create">
       <created>1572261817130</created>
@@ -424,7 +436,42 @@
       <option name="project" value="LOCAL" />
       <updated>1572476178943</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="emptied test.py">
+      <created>1572476369485</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1572476369485</updated>
+    </task>
+    <task id="LOCAL-00022" summary="deleted old files">
+      <created>1572476649280</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1572476649280</updated>
+    </task>
+    <task id="LOCAL-00023" summary="updated user login gui to include error msg">
+      <created>1572477101837</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1572477101837</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Added Home screen">
+      <created>1572523097492</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1572523097492</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Started nav bar">
+      <created>1572525864925</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1572525864925</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -460,13 +507,18 @@
     <MESSAGE value="added git ignore" />
     <MESSAGE value="fixed &quot;login failed&quot; bug" />
     <MESSAGE value="created test user accounts" />
-    <option name="LAST_COMMIT_MESSAGE" value="created test user accounts" />
+    <MESSAGE value="emptied test.py" />
+    <MESSAGE value="deleted old files" />
+    <MESSAGE value="updated user login gui to include error msg" />
+    <MESSAGE value="Added Home screen" />
+    <MESSAGE value="Started nav bar" />
+    <option name="LAST_COMMIT_MESSAGE" value="Started nav bar" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/CSProject$main.coverage" NAME="main Coverage Results" MODIFIED="1572475509340" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CSProject$main.coverage" NAME="main Coverage Results" MODIFIED="1572558745992" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSProject$event_management.coverage" NAME="event_management Coverage Results" MODIFIED="1572456008254" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSProject$team_management.coverage" NAME="team_management Coverage Results" MODIFIED="1572433055344" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/CSProject$test.coverage" NAME="test Coverage Results" MODIFIED="1572476006008" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CSProject$test.coverage" NAME="test Coverage Results" MODIFIED="1572477350306" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSProject$account_management.coverage" NAME="account_management Coverage Results" MODIFIED="1572435267990" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

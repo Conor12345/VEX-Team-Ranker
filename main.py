@@ -4,7 +4,7 @@ import account_management
 class Main(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.geometry("1280x720+-1600+100")
+        self.geometry("1280x720+100+100")
         self.title("Main")
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -70,10 +70,10 @@ class Home(tk.Frame):
         self.homeButton.place(relx=0.025, rely=0.025)
 
         self.databaseButton = tk.Button(self, text="Database", font=("Verdana", 24))
-        self.databaseButton.place(relx=0.2, rely=0.025)
+        self.databaseButton.place(relx=0.15, rely=0.025)
 
         self.resultsButton = tk.Button(self, text="Results", font=("Verdana", 24))
-        self.resultsButton.place(relx=0.4, rely=0.025)
+        self.resultsButton.place(relx=0.3, rely=0.025)
 
 app = Main()
 app.mainloop()
