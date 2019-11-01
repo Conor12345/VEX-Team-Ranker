@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66c5b813-e995-4074-ba2a-13f8181abb37" name="Default Changelist" comment="changed window location">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/CSProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CSProject.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <list id="c294ea68-1f31-44d2-b7f7-21fc52e2b868" name="No change" comment="No change" />
@@ -251,7 +249,12 @@
           <expand>
             <path>
               <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@2b463618" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@65889c60" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+            </path>
+            <path>
+              <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@65889c60" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceNode@199ea17f" type="9fbbdea:ServiceModel$ServiceNode" />
             </path>
           </expand>
           <select />
@@ -294,6 +297,9 @@
       <workItem from="1572555269908" duration="491000" />
       <workItem from="1572557708027" duration="285000" />
       <workItem from="1572558416748" duration="4812000" />
+      <workItem from="1572570191883" duration="143000" />
+      <workItem from="1572570352782" duration="155000" />
+      <workItem from="1572570740409" duration="248000" />
     </task>
     <task id="LOCAL-00001" summary="update user create">
       <created>1572261817130</created>
@@ -477,7 +483,14 @@
       <option name="project" value="LOCAL" />
       <updated>1572569413554</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="changed window location">
+      <created>1572570303909</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1572570303909</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
