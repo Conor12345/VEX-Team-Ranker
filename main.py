@@ -93,5 +93,5 @@ class Home(tk.Frame):
         self.resultsButton.place(relx=0.3, rely=0.025)
 
 app = Main()
-app.state("zoomed")
+app.state(pc_identifier.getType())
 app.mainloop()
