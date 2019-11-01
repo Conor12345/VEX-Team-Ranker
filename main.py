@@ -1,16 +1,21 @@
 import tkinter as tk
 import account_management
+import pc_identifier
 
 class Main(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
-        self.geometry("1280x720+100+100")
+        self.geometry(pc_identifier.getRes())
         self.title("Main")
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
 
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
+
+        self.currentUser = ""
+        self.isAdmin = False
+        self.teamNum = ""
 
         self.frames = {}
 
@@ -26,6 +31,11 @@ class Main(tk.Tk):
     def show_frame(self, container):
         frame = self.frames[container]
         frame.tkraise()
+
+    def login_success(self, UserName):
+        self.currentUser = UserName
+        self.isAdmin = account_management.is_admin(UserName)
+        self.teamNum = account_management.get_user_data(UserName)[3]
 
 class Login(tk.Frame):
     def __init__(self, parent, controller):
@@ -54,7 +64,7 @@ class Login(tk.Frame):
 
     def submitLogin(self):
         if account_management.verify_user_login(self.userBox.get(), self.passBox.get()):
-            print("login sucess")
+            self.controller.login_success(self.userBox.get())
             self.controller.show_frame(Home)
         else:
             errorMsg = tk.Label(self, text="ERROR - Login Unsuccessful", font=("Verdana", 18))
