@@ -45,6 +45,9 @@ def get_user_data(UserName):
     else:
         return list(result[0])
 
+def is_admin(UserName):
+    return get_user_data(UserName)[4] == 1
+
 def verify_user_login(UserName, Password):
     user = get_user_data(UserName)
     if not user:
