@@ -29,8 +29,7 @@ class Main(tk.Tk):
         self.show_frame(Login)
 
     def show_frame(self, container):
-        frame = self.frames[container]
-        frame.tkraise()
+        self.frames[container].tkraise()
 
     def login_success(self, UserName):
         self.currentUser = UserName
@@ -84,13 +83,13 @@ class Home(tk.Frame):
 
         # -=+=- Navigation Bar -=+=-- #
         self.homeButton = tk.Button(self, text="Home", font=("Verdana", 20))
-        self.homeButton.place(relx=0.025, rely=0.025)
+        self.homeButton.place(x=20, y=20)
 
         self.databaseButton = tk.Button(self, text="Database", font=("Verdana", 20))
-        self.databaseButton.place(relx=0.15, rely=0.025)
+        self.databaseButton.place(x=136, y=20)
 
         self.resultsButton = tk.Button(self, text="Results", font=("Verdana", 20))
-        self.resultsButton.place(relx=0.3, rely=0.025)
+        self.resultsButton.place(x=300, y=20)
 
 app = Main()
 app.state(pc_identifier.getType())
