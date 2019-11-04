@@ -1,5 +1,7 @@
 import sqlite3
 import api_query, match_management
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 def check_event_presence(EventID):
     db = sqlite3.connect("database.db")
@@ -32,4 +34,13 @@ def refresh_event(EventID): # Updates the data for the specified event
     db.commit()
     import_event("sku=" + EventID) # Imports the event as if it was never present
 
-import_event("country=United Kingdom")
+def refresh_recent_events():
+    dateCheck = date.today() + relativedelta(months=-6)
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    results = c.execute("SELECT EventID FROM tblEvents where Date > (?)", (dateCheck,))
+    for event in results.fetchall():
+         if not match_management.check_event_has_matches(event[0]):
+             refresh_event(event[0])
+
+refresh_recent_events()

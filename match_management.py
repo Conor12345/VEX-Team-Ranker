@@ -1,6 +1,8 @@
 import sqlite3
 import api_query
 import team_management
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 def import_match(EventID):
     data = api_query.get_match_data(EventID)
@@ -35,3 +37,9 @@ def import_match(EventID):
                     if match[teamNum] != "":
                         if not team_management.check_team_presence(match[teamNum]):
                             team_management.import_team(match[teamNum])
+
+def check_event_has_matches(EventID : str):
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    results = c.execute("SELECT * FROM tblMatches WHERE EventID=(?)", (EventID,))
+    return len(results.fetchall()) >= 1
