@@ -42,31 +42,25 @@ class Login(tk.Frame):
         self.controller = controller
         tk.Frame.__init__(self, parent)
 
-        titleLabel = tk.Label(self, text="Login", font=globalVars.text(48))
-        titleLabel.grid(row=0, column=1, columnspan=4)
+        titleLabel = tk.Label(self, text="Login", font=("Verdana", 48))
+        titleLabel.place(relx=0.5, rely=0.25, anchor="center")
 
-        userLabel = tk.Label(self, text="Username:", font=globalVars.text())
-        userLabel.grid(row=2, column=2)
+        userLabel = tk.Label(self, text="Username:", font=("Verdana", 20))
+        userLabel.place(relx=0.3, rely=0.45, anchor="center")
 
-        self.userBox = tk.Entry(self, width=20, font=globalVars.text())
-        self.userBox.grid(row=2, column= 4)
+        self.userBox = tk.Entry(self, width=20, font=("Verdana", 20))
+        self.userBox.place(relx=0.5, rely=0.45, anchor="center")
 
-        passLabel = tk.Label(self, text=" Password:", font=globalVars.text())
-        passLabel.grid(row=3, column=2)
+        passLabel = tk.Label(self, text=" Password:", font=("Verdana", 20))
+        passLabel.place(relx=0.3, rely=0.55, anchor="center")
 
-        self.passBox = tk.Entry(self, width=20, font=globalVars.text(), show="*")
-        self.passBox.grid(row=3, column=4)
+        self.passBox = tk.Entry(self, width=20, font=("Verdana", 20), show="*")
+        self.passBox.place(relx=0.5, rely=0.55, anchor="center")
 
-        self.submitButton = tk.Button(self, text="Submit", command=self.submitLogin, font=globalVars.text())
-        self.submitButton.grid(row=5, column=1, columnspan=4)
+        self.submitButton = tk.Button(self, text="Submit", command=self.submitLogin, font=("Verdana", 20))
+        self.submitButton.place(relx=0.5, rely=0.7, anchor="center")
 
         self.userBox.focus()
-
-        self.grid_rowconfigure(0, weight=2)
-        self.grid_rowconfigure(5, weight=2)
-
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(5, weight=1)
 
     def submitLogin(self):
         if self.userBox.get() + self.passBox.get() == "":
@@ -104,7 +98,7 @@ class Home(tk.Frame):
         eventLabel.grid(row=1, column= 0)
 
         self.currentEventVar = tk.StringVar(self)
-        self.currentEventVar.set(globalVars.seasons()[-1])
+        #self.currentEventVar.set(globalVars.seasons()[-1])
 
 
         self.grid_rowconfigure(1, weight=1)
