@@ -19,7 +19,7 @@ class Main(tk.Tk):
 
         self.frames = {}
 
-        for F in [Login, Home, Database]:
+        for F in [Login, Home]:
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -76,31 +76,27 @@ class Login(tk.Frame):
             errorMsg = tk.Label(self, text="ERROR - Login Unsuccessful", font=("Verdana", 18))
             errorMsg.place(relx=0.5, rely=0.8, anchor="center")
 
-class Default(tk.Frame):
+class Home(tk.Frame):
     def __init__(self, parent, controller):
         self.controller = controller
         tk.Frame.__init__(self, parent)
 
+        # -=+=- Navigation Bar -=+=-- #
         self.homeButton = tk.Button(self, text="Home", font=("Verdana", 20))
-        self.homeButton.place(x=20, y=20)
+        self.homeButton.grid(row=0, column=1)
 
-        self.databaseButton = tk.Button(self, text="Database", font=("Verdana", 20), command=self.switchToDatabase())
-        self.databaseButton.place(x=136, y=20)
+        self.databaseButton = tk.Button(self, text="Database", font=("Verdana", 20))
+        self.databaseButton.grid(row=0, column=2)
 
         self.resultsButton = tk.Button(self, text="Results", font=("Verdana", 20))
-        self.resultsButton.place(x=300, y=20)
+        self.resultsButton.grid(row=0, column=3)
 
-    def switchToDatabase(self):
-        self.controller.show_frame(Database)
+        self.grid_rowconfigure(1, weight=1)
 
-class Home(Default):
-    def __init__(self, parent, controller):
-        Default.__init__(self, parent, controller)
+        importEventLabel = tk.Label(self, text="Import team via Event", font=("Verdana", 20))
+        importEventLabel.grid(row=2, column=1, columnspan=3)
 
-class Database(Default):
-    def __init__(self, parent, controller):
-        Default.__init__(self, parent, controller)
-
+        self.grid_rowconfigure(10, weight=1)
 
 app = Main()
 app.state(pc_identifier.getType())
