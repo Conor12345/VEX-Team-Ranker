@@ -31,3 +31,5 @@ def refresh_event(EventID): # Updates the data for the specified event
     c.execute('DELETE FROM tblMatches WHERE EventID = (?)', (EventID,))
     db.commit()
     import_event("sku=" + EventID) # Imports the event as if it was never present
+
+import_event("country=United Kingdom")
