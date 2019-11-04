@@ -42,5 +42,3 @@ def refresh_recent_events():
     for event in results.fetchall():
          if not match_management.check_event_has_matches(event[0]):
              refresh_event(event[0])
-
-refresh_recent_events()

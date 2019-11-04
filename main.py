@@ -96,11 +96,11 @@ class Home(tk.Frame):
         self.resultsButton.grid(row=0, column=3)
 
 
-        self.importEventGrid = tk.Frame(self, width=800, bg="blue")
+        self.importEventGrid = tk.Frame(self)
         self.importEventGrid.place(x=40, y=100)
 
         importEventLabel = tk.Label(self.importEventGrid, text="Select teams via Event", font=global_variables.text())
-        importEventLabel.grid(row=0, column=0, columnspan=2)
+        importEventLabel.grid(row=0, column=0, columnspan=3)
 
         seasonLabel = tk.Label(self.importEventGrid, text="Season:", font=global_variables.text())
         seasonLabel.grid(row=2, column=0)
@@ -109,7 +109,8 @@ class Home(tk.Frame):
         self.currentSeasonVar.set("Choose season")
 
         self.seasonMenu = tk.OptionMenu(self.importEventGrid, self.currentSeasonVar, *global_variables.seasons())
-        self.seasonMenu.grid(row=2, column=1)
+        self.seasonMenu.grid(row=2, column=1, columnspan=2)
+        self.seasonMenu.config(font=global_variables.text())
 
         countryLabel = tk.Label(self.importEventGrid, text="Country:", font=global_variables.text())
         countryLabel.grid(row=3, column=0)
@@ -118,7 +119,8 @@ class Home(tk.Frame):
         self.currentCountryVar.set("Choose country")
 
         self.countryMenu = tk.OptionMenu(self.importEventGrid, self.currentCountryVar, *global_variables.countries())
-        self.countryMenu.grid(row=3, column=1)
+        self.countryMenu.grid(row=3, column=1, columnspan=2)
+        self.countryMenu.config(text=global_variables.text())
 
         eventLabel = tk.Label(self.importEventGrid, text="Event:", font=global_variables.text())
         eventLabel.grid(row=4, column=0)
@@ -127,7 +129,8 @@ class Home(tk.Frame):
         self.currentEventVar.set("Choose event")
 
         self.eventMenu = tk.OptionMenu(self.importEventGrid, self.currentEventVar, "test1", "test2", "test3")
-        self.eventMenu.grid(row=4, column=1)
+        self.eventMenu.grid(row=4, column=1, columnspan=2)
+        self.eventMenu.config(font=global_variables.text())
 
         self.importEventSubmit = tk.Button(self.importEventGrid, text="Select teams", font=global_variables.text())
         self.importEventSubmit.grid(row=5, column=0, columnspan=2)
