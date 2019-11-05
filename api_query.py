@@ -18,7 +18,7 @@ def get_match_data(EventID):
         return  data["result"]
 
 def get_event_data(query):
-    response = requests.get("https://api.vexdb.io/v1/get_events?" + query)
+    response = requests.get("https://api.vexdb.io/v1/get_events?program=VRC&" + query)
     data = json.loads(response.text)
     if data["size"] == 0:
         return False
