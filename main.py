@@ -69,8 +69,9 @@ class Login(tk.Frame):
         self.submitButton.place(relx=0.5, rely=0.7, anchor="center")
 
         self.userBox.focus()
+        self.controller.bind("<Return>", self.submitLogin)
 
-    def submitLogin(self):
+    def submitLogin(self, blank=None):
         if self.userBox.get() + self.passBox.get() == "":
             self.userBox.insert(0, "Admin")
             self.passBox.insert(0, "12345")
@@ -107,35 +108,34 @@ class Home(tk.Frame):
         importEventLabel = tk.Label(self.importEventGrid, text="Select teams via Event", font=global_variables.text())
         importEventLabel.grid(row=0, column=0, columnspan=3)
 
-        seasonLabel = tk.Label(self.importEventGrid, text="Season:", font=global_variables.text())
-        seasonLabel.grid(row=2, column=0)
-
         self.currentSeasonVar = tk.StringVar(self)
         self.currentSeasonVar.set("Choose season")
-
-        self.seasonMenu = tk.OptionMenu(self.importEventGrid, self.currentSeasonVar, *global_variables.seasons(), command=self.updateEventMenu())
-        self.seasonMenu.grid(row=2, column=1, columnspan=2, padx=10, pady=10)
-        self.seasonMenu.config(font=global_variables.text())
-
-        countryLabel = tk.Label(self.importEventGrid, text="Country:", font=global_variables.text())
-        countryLabel.grid(row=3, column=0)
 
         self.currentCountryVar = tk.StringVar(self)
         self.currentCountryVar.set("United Kingdom")
 
-        self.countryMenu = tk.OptionMenu(self.importEventGrid, self.currentCountryVar, *global_variables.countries())
-        self.countryMenu.grid(row=3, column=1, columnspan=2, padx=10, pady=10)
-        self.countryMenu.config(font=global_variables.text())
-
-        eventLabel = tk.Label(self.importEventGrid, text="Event:", font=global_variables.text())
-        eventLabel.grid(row=4, column=0)
-
         self.currentEventVar = tk.StringVar(self)
         self.currentEventVar.set("Choose event")
+        countryLabel = tk.Label(self.importEventGrid, text="Country:", font=global_variables.text(12))
+        countryLabel.grid(row=3, column=0)
+
+        self.countryMenu = tk.OptionMenu(self.importEventGrid, self.currentCountryVar, *global_variables.countries())
+        self.countryMenu.grid(row=3, column=1, columnspan=2, padx=10, pady=10)
+        self.countryMenu.config(font=global_variables.text(12))
+
+        eventLabel = tk.Label(self.importEventGrid, text="Event:", font=global_variables.text(12))
+        eventLabel.grid(row=4, column=0)
 
         self.eventMenu = tk.OptionMenu(self.importEventGrid, self.currentEventVar, "Select country and season")
         self.eventMenu.grid(row=4, column=1, columnspan=2, padx=10, pady=10)
-        self.eventMenu.config(font=global_variables.text())
+        self.eventMenu.config(font=global_variables.text(12))
+
+        seasonLabel = tk.Label(self.importEventGrid, text="Season:", font=global_variables.text(12))
+        seasonLabel.grid(row=2, column=0)
+
+        self.seasonMenu = tk.OptionMenu(self.importEventGrid, self.currentSeasonVar, *tuple(global_variables.seasons()), command=self.updateEventMenu)
+        self.seasonMenu.grid(row=2, column=1, columnspan=2, padx=10, pady=10)
+        self.seasonMenu.config(font=global_variables.text(12))
 
         self.importEventSubmit = tk.Button(self.importEventGrid, text="Select teams", font=global_variables.text())
         self.importEventSubmit.grid(row=5, column=0, columnspan=2)
@@ -147,14 +147,14 @@ class Home(tk.Frame):
         importTeamLabel = tk.Label(self.importTeamGrid, text="Select team via team number", font=global_variables.text())
         importTeamLabel.grid(row=0, column=0)
 
-        self.importTeamBox = tk.Entry(self.importTeamGrid, font=global_variables.text())
+        self.importTeamBox = tk.Entry(self.importTeamGrid, font=global_variables.text(12))
         self.importTeamBox.grid(row=1, column=0)
 
         importTeamNote = tk.Label(self.importTeamGrid, text="Use commas to separate teams", font=global_variables.text(10))
         importTeamNote.grid(row=2, column=0)
 
         self.importTeamSubmit = tk.Button(self.importTeamGrid, text="Select teams", font=global_variables.text())
-        self.importTeamSubmit.grid(row=3, column=0, columnspan=3)
+        self.importTeamSubmit.grid(row=3, column=0)
 
 
         self.dataGrid = tk.Frame(self)
@@ -171,9 +171,13 @@ class Home(tk.Frame):
 
         #TODO finish create GUI items
 
-    def updateEventMenu(self):
-        pass
-        #TODO make function here to update the dropdown
+
+    def updateEventMenu(self, test):
+        if self.currentSeasonVar.get() != "Country:":
+            data = event_management.get_event_list(self.currentCountryVar.get(), self.currentSeasonVar.get())
+            self.eventMenu["menu"].delete(0, "end")
+            for eventName in data:
+                self.eventMenu["menu"].add_command(label=eventName, command=tk._setit(self.currentEventVar, eventName))
 
 
 
