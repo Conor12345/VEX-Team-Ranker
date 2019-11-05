@@ -4,7 +4,7 @@ import account_management
 import global_variables
 import pc_identifier
 import event_management
-
+import team_management
 
 class Main(tk.Tk):
     def __init__(self):
@@ -21,7 +21,7 @@ class Main(tk.Tk):
         self.isAdmin = False
         self.teamNum = ""
 
-        self.selectedTeams = ["1111", "1112", "1113", "1114", "1115"]
+        self.selectedTeams = []
         self.selectedSeason = ""
         self.selectedCountry = ""
 
@@ -137,7 +137,7 @@ class Home(tk.Frame):
         self.seasonMenu.grid(row=2, column=1, columnspan=2, padx=10, pady=10)
         self.seasonMenu.config(font=global_variables.text(12))
 
-        self.importEventSubmit = tk.Button(self.importEventGrid, text="Select teams", font=global_variables.text())
+        self.importEventSubmit = tk.Button(self.importEventGrid, text="Select teams", font=global_variables.text(), command=self.importTeams)
         self.importEventSubmit.grid(row=5, column=0, columnspan=2)
 
 
@@ -160,13 +160,12 @@ class Home(tk.Frame):
         self.dataGrid = tk.Frame(self)
         self.dataGrid.place(x=1000, y=100)
 
-        self.dataListbox = tk.Listbox(self.dataGrid)
+        self.dataListbox = tk.Listbox(self.dataGrid, width=10, height=20)
         self.dataListbox.grid(row=0, column=0)
         self.dataListbox.config(font=global_variables.text(16))
 
         for record in range(0, len(self.controller.selectedTeams)):
-            row = ""
-            row += self.controller.selectedTeams[record]
+            row = self.controller.selectedTeams[record]
             self.dataListbox.insert(tk.END, row)
 
         #TODO finish create GUI items
@@ -178,6 +177,17 @@ class Home(tk.Frame):
             self.eventMenu["menu"].delete(0, "end")
             for eventName in data:
                 self.eventMenu["menu"].add_command(label=eventName, command=tk._setit(self.currentEventVar, eventName))
+
+    def importTeams(self, test=None):
+        self.controller.selectedTeams += team_management.get_team_list(self.currentEventVar.get())
+        self.refreshTeamList()
+
+    def refreshTeamList(self, test=None):
+        self.dataListbox.delete(0, tk.END)
+        for record in range(0, len(self.controller.selectedTeams)):
+            row = self.controller.selectedTeams[record]
+            self.dataListbox.insert(tk.END, row)
+
 
 
 
