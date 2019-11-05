@@ -20,7 +20,7 @@ def import_event(query): # Loads event data base upon a query such as "Country=U
         c = db.cursor()
         for event in data: # Checks each event return by database query
             if not check_event_presence(event["sku"]): # Checks if the event is already present in the event database
-                c.execute("INSERT INTO tblEvents VALUES (?, ?, ?, ?, ?, ?)", (event["sku"], event["name"], event["loc_city"], event["loc_postcode"], event["season"], event["start"][0:10]))
+                c.execute("INSERT INTO tblEvents VALUES (?, ?, ?, ?, ?, ?, ?)", (event["sku"], event["name"], event["loc_city"], event["loc_postcode"], event["season"], event["start"][0:10], event["loc_country"]))
                 db.commit()
                 match_management.import_match(event["sku"]) # Passes the EventID to the match import function to import all matches which took place at the event
             else:
@@ -42,3 +42,12 @@ def refresh_recent_events():
     for event in results.fetchall():
          if not match_management.check_event_has_matches(event[0]):
              refresh_event(event[0])
+
+def get_event_list(country, season):
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    results =  c.execute("SELECT EventName FROM tblEvents WHERE Country=(?) and Season=(?)", (country, season)).fetchall()
+    data = []
+    for event in results:
+        data.append(event[0])
+    return data
