@@ -51,3 +51,12 @@ def get_event_list(country, season):
     for event in results:
         data.append(event[0])
     return data
+
+def get_eventID(eventName):
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    results = c.execute("SELECT EventID FROM tblEvents WHERE EventName = (?)", (eventName,)).fetchall()
+    if len(results) == 0:
+        return False
+    else:
+        return results[0][0]
