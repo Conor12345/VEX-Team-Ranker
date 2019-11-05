@@ -25,7 +25,15 @@ def refresh_team(TeamNum):
     db = sqlite3.connect("database.db")
     c = db.cursor()
     skill = c.execute('SELECT * FROM tblTeams where TeamNum = (?)', (TeamNum,)).fetchall()[0][4]
-    print(skill)
     c.execute('DELETE FROM tblTeams WHERE TeamNum = (?)', (TeamNum,))
     db.commit()
     import_team(TeamNum, skill)
+
+def get_team_list():
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    results = c.execute("SELECT TeamNum FROM tblTeams")
+    data = []
+    for team in results.fetchall():
+        data.append(team[0])
+    return data
