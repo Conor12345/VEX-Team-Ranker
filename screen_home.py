@@ -89,8 +89,11 @@ class Home(tk.Frame):
         self.removeTeamButton = tk.Button(self.dataGrid, text="Remove selected team", font=global_variables.text(16), command=self.removeTeam)
         self.removeTeamButton.grid(row=2, column=1)
 
+        self.removeAllTeamsButton = tk.Button(self.dataGrid, text="Remove allteams", font=global_variables.text(16), command=self.removeAllTeams)
+        self.removeAllTeamsButton.grid(row=3, column=1)
+
         self.viewTeamDataButton = tk.Button(self.dataGrid, text="View selected team", font=global_variables.text(16))
-        self.viewTeamDataButton.grid(row=3, column=1)
+        self.viewTeamDataButton.grid(row=4, column=1)
 
         for record in range(0, len(self.controller.selectedTeams)):
             row = self.controller.selectedTeams[record]
@@ -103,21 +106,21 @@ class Home(tk.Frame):
         self.finalCountryVar.set("United Kingdom")
 
         finalCountryLabel = tk.Label(self.dataGrid, text="Country:", font=global_variables.text(12))
-        finalCountryLabel.grid(row=4, column=1)
+        finalCountryLabel.grid(row=5, column=1)
 
         self.finalCountryMenu = tk.OptionMenu(self.dataGrid, self.finalCountryVar, *global_variables.countries())
-        self.finalCountryMenu.grid(row=5, column=1, padx=5, pady=5)
+        self.finalCountryMenu.grid(row=6, column=1, padx=5, pady=5)
         self.finalCountryMenu.config(font=global_variables.text(12))
 
         finalseasonLabel = tk.Label(self.dataGrid, text="Season:", font=global_variables.text(12))
-        finalseasonLabel.grid(row=6, column=1)
+        finalseasonLabel.grid(row=7, column=1)
 
         self.finalSeasonMenu = tk.OptionMenu(self.dataGrid, self.finalSeasonVar, *tuple(global_variables.seasons()), command=self.updateEventMenu)
-        self.finalSeasonMenu.grid(row=7, column=1, padx=5, pady=5)
+        self.finalSeasonMenu.grid(row=8, column=1, padx=5, pady=5)
         self.finalSeasonMenu.config(font=global_variables.text(12))
 
         self.beginButton = tk.Button(self.dataGrid, text="Begin analysis", font=global_variables.text())
-        self.beginButton.grid(row=8, column=1, columnspan=2)
+        self.beginButton.grid(row=9, column=1, columnspan=2)
 
     def updateEventMenu(self, test):
         if self.currentSeasonVar.get() != "Country:":
@@ -133,9 +136,10 @@ class Home(tk.Frame):
 
     def refreshTeamList(self, test=None):
         self.dataListbox.delete(0, tk.END)
-        for record in range(0, len(self.controller.selectedTeams)):
-            row = self.controller.selectedTeams[record]
-            self.dataListbox.insert(tk.END, row)
+        if len(self.controller.selectedTeams) > 0:
+            for record in range(0, len(self.controller.selectedTeams)):
+                row = self.controller.selectedTeams[record]
+                self.dataListbox.insert(tk.END, row)
 
     def removeTeam(self, test=None):
         if len(self.controller.selectedTeams) > 0:
@@ -158,3 +162,7 @@ class Home(tk.Frame):
             if len(errors) > 0:
                 errorLabel = tk.Label(self.importTeamGrid, text="Teams not found: " + "".join(errors), font=global_variables.text(12))
                 errorLabel.grid(row=4, column=0)
+
+    def removeAllTeams(self):
+        self.controller.selectedTeams = []
+        self.refreshTeamList()
