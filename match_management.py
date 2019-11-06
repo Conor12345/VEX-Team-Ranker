@@ -1,8 +1,8 @@
 import sqlite3
+
 import api_query
 import team_management
-from datetime import date
-from dateutil.relativedelta import relativedelta
+
 
 def import_match(EventID,practice=False):
     data = api_query.get_match_data(EventID)
