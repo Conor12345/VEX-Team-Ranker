@@ -109,18 +109,18 @@ class Home(tk.Frame):
         finalCountryLabel.grid(row=5, column=1)
 
         self.finalCountryMenu = tk.OptionMenu(self.dataGrid, self.finalCountryVar, *global_variables.countries())
-        self.finalCountryMenu.grid(row=6, column=1, padx=5, pady=5)
+        self.finalCountryMenu.grid(row=6, column=1)
         self.finalCountryMenu.config(font=global_variables.text(12))
 
         finalseasonLabel = tk.Label(self.dataGrid, text="Season:", font=global_variables.text(12))
         finalseasonLabel.grid(row=7, column=1)
 
         self.finalSeasonMenu = tk.OptionMenu(self.dataGrid, self.finalSeasonVar, *tuple(global_variables.seasons()), command=self.updateEventMenu)
-        self.finalSeasonMenu.grid(row=8, column=1, padx=5, pady=5)
+        self.finalSeasonMenu.grid(row=8, column=1)
         self.finalSeasonMenu.config(font=global_variables.text(12))
 
         self.beginButton = tk.Button(self.dataGrid, text="Begin analysis", font=global_variables.text())
-        self.beginButton.grid(row=9, column=1, columnspan=2)
+        self.beginButton.grid(row=9, column=0, columnspan=3)
 
     def updateEventMenu(self, test):
         if self.currentSeasonVar.get() != "Country:":
