@@ -89,8 +89,8 @@ class Home(tk.Frame):
         self.controller = controller
         tk.Frame.__init__(self, parent)
 
-        self.navbarGrid = tk.Frame(self)
-        self.navbarGrid.place(x=20, y=20)
+        self.navbarGrid = tk.Frame(self, padx=10, pady=10)
+        self.navbarGrid.grid(row=0, column=0)
 
         self.homeButton = tk.Button(self.navbarGrid, text="Home", font=global_variables.text(), padx=20)
         self.homeButton.grid(row=0, column=1)
@@ -102,8 +102,8 @@ class Home(tk.Frame):
         self.resultsButton.grid(row=0, column=3)
 
 
-        self.importEventGrid = tk.Frame(self)
-        self.importEventGrid.place(x=40, y=100)
+        self.importEventGrid = tk.Frame(self, padx=10, pady=10)
+        self.importEventGrid.grid(row=1, column=0)
 
         importEventLabel = tk.Label(self.importEventGrid, text="Select teams via Event", font=global_variables.text())
         importEventLabel.grid(row=0, column=0, columnspan=3)
@@ -137,12 +137,12 @@ class Home(tk.Frame):
         self.seasonMenu.grid(row=2, column=1, columnspan=2, padx=10, pady=10)
         self.seasonMenu.config(font=global_variables.text(12))
 
-        self.importEventSubmit = tk.Button(self.importEventGrid, text="Select teams", font=global_variables.text(), command=self.importTeams)
+        self.importEventSubmit = tk.Button(self.importEventGrid, text="Select teams", font=global_variables.text(16), command=self.importTeamsByEvent)
         self.importEventSubmit.grid(row=5, column=0, columnspan=2)
 
 
-        self.importTeamGrid = tk.Frame(self)
-        self.importTeamGrid.place(x=40, y=600)
+        self.importTeamGrid = tk.Frame(self, padx=10, pady=10)
+        self.importTeamGrid.grid(row=2, column=0)
 
         importTeamLabel = tk.Label(self.importTeamGrid, text="Select team via team number", font=global_variables.text())
         importTeamLabel.grid(row=0, column=0)
@@ -153,16 +153,25 @@ class Home(tk.Frame):
         importTeamNote = tk.Label(self.importTeamGrid, text="Use commas to separate teams", font=global_variables.text(10))
         importTeamNote.grid(row=2, column=0)
 
-        self.importTeamSubmit = tk.Button(self.importTeamGrid, text="Select teams", font=global_variables.text())
+        self.importTeamSubmit = tk.Button(self.importTeamGrid, text="Select teams", font=global_variables.text(16), command=self.importTeamsByTeamNum)
         self.importTeamSubmit.grid(row=3, column=0)
 
 
-        self.dataGrid = tk.Frame(self)
-        self.dataGrid.place(x=1000, y=100)
+        self.dataGrid = tk.Frame(self, padx=10, pady=10)
+        self.dataGrid.grid(row=1, column=1, rowspan=2)
+
+        selectedTeamsLabel = tk.Label(self.dataGrid, text="Currently selected teams:", font=global_variables.text())
+        selectedTeamsLabel.grid(row=0, column=0, columnspan=2)
 
         self.dataListbox = tk.Listbox(self.dataGrid, width=10, height=20)
-        self.dataListbox.grid(row=0, column=0)
+        self.dataListbox.grid(row=2, column=0, rowspan=3)
         self.dataListbox.config(font=global_variables.text(16))
+
+        self.removeTeamButton = tk.Button(self.dataGrid, text="Remove selected team", font=global_variables.text(16), command=self.removeTeam)
+        self.removeTeamButton.grid(row=2, column=1)
+
+        self.viewTeamDataButton = tk.Button(self.dataGrid, text="View selected team", font=global_variables.text(16))
+        self.viewTeamDataButton.grid(row=3, column=1)
 
         for record in range(0, len(self.controller.selectedTeams)):
             row = self.controller.selectedTeams[record]
@@ -178,7 +187,7 @@ class Home(tk.Frame):
             for eventName in data:
                 self.eventMenu["menu"].add_command(label=eventName, command=tk._setit(self.currentEventVar, eventName))
 
-    def importTeams(self, test=None):
+    def importTeamsByEvent(self, test=None):
         self.controller.selectedTeams += team_management.get_team_list(self.currentEventVar.get())
         self.controller.selectedTeams = sorted(list(set(self.controller.selectedTeams)))
         self.refreshTeamList()
@@ -187,9 +196,29 @@ class Home(tk.Frame):
         self.dataListbox.delete(0, tk.END)
         for record in range(0, len(self.controller.selectedTeams)):
             row = self.controller.selectedTeams[record]
-            self.dataListbox.insert(tk.END, row)
+            self.dataListbox.insert(tk.END, row)#
 
+    def removeTeam(self, test=None):
+        if len(self.controller.selectedTeams) > 0:
+            self.controller.selectedTeams.remove(self.dataListbox.get(tk.ACTIVE))
+            self.controller.selectedTeams = sorted(list(set(self.controller.selectedTeams)))
+            self.refreshTeamList()
 
+    def importTeamsByTeamNum(self, test=None):
+        data = self.importTeamBox.get().replace(" ", "").split(",")
+        if len(data) > 0:
+            errors = []
+            for teamNum in data:
+                if team_management.check_team_presence(teamNum):
+                    self.controller.selectedTeams.append(teamNum)
+                    self.controller.selectedTeams = sorted(list(set(self.controller.selectedTeams)))
+                    self.refreshTeamList()
+                else:
+                    if not team_management.import_team(teamNum):
+                        errors.append(teamNum)
+            if len(errors) > 0:
+                errorLabel = tk.Label(self.importTeamGrid, text="Teams not found: " + "".join(errors), font=global_variables.text(12))
+                errorLabel.grid(row=4, column=0)
 
 
 
