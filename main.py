@@ -180,6 +180,7 @@ class Home(tk.Frame):
 
     def importTeams(self, test=None):
         self.controller.selectedTeams += team_management.get_team_list(self.currentEventVar.get())
+        self.controller.selectedTeams = sorted(list(set(self.controller.selectedTeams)))
         self.refreshTeamList()
 
     def refreshTeamList(self, test=None):
