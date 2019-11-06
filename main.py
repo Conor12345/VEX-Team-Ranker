@@ -116,6 +116,7 @@ class Home(tk.Frame):
 
         self.currentEventVar = tk.StringVar(self)
         self.currentEventVar.set("Choose event")
+        
         countryLabel = tk.Label(self.importEventGrid, text="Country:", font=global_variables.text(12))
         countryLabel.grid(row=3, column=0)
 
@@ -164,7 +165,7 @@ class Home(tk.Frame):
         selectedTeamsLabel.grid(row=0, column=0, columnspan=2)
 
         self.dataListbox = tk.Listbox(self.dataGrid, width=10, height=20)
-        self.dataListbox.grid(row=2, column=0, rowspan=3)
+        self.dataListbox.grid(row=2, column=0, rowspan=7)
         self.dataListbox.config(font=global_variables.text(16))
 
         self.removeTeamButton = tk.Button(self.dataGrid, text="Remove selected team", font=global_variables.text(16), command=self.removeTeam)
@@ -177,8 +178,28 @@ class Home(tk.Frame):
             row = self.controller.selectedTeams[record]
             self.dataListbox.insert(tk.END, row)
 
-        #TODO finish create GUI items
+        self.finalSeasonVar = tk.StringVar(self)
+        self.finalSeasonVar.set("Choose season")
 
+        self.finalCountryVar = tk.StringVar(self)
+        self.finalCountryVar.set("United Kingdom")
+
+        finalCountryLabel = tk.Label(self.dataGrid, text="Country:", font=global_variables.text(12))
+        finalCountryLabel.grid(row=4, column=1)
+
+        self.finalCountryMenu = tk.OptionMenu(self.dataGrid, self.finalCountryVar, *global_variables.countries())
+        self.finalCountryMenu.grid(row=5, column=1, padx=5, pady=5)
+        self.finalCountryMenu.config(font=global_variables.text(12))
+
+        finalseasonLabel = tk.Label(self.dataGrid, text="Season:", font=global_variables.text(12))
+        finalseasonLabel.grid(row=6, column=1)
+
+        self.finalSeasonMenu = tk.OptionMenu(self.dataGrid, self.finalSeasonVar, *tuple(global_variables.seasons()), command=self.updateEventMenu)
+        self.finalSeasonMenu.grid(row=7, column=1, padx=5, pady=5)
+        self.finalSeasonMenu.config(font=global_variables.text(12))
+
+        self.beginButton = tk.Button(self.dataGrid, text="Begin analysis", font=global_variables.text())
+        self.beginButton.grid(row=8, column=0, columnspan=3)
 
     def updateEventMenu(self, test):
         if self.currentSeasonVar.get() != "Country:":
@@ -196,7 +217,7 @@ class Home(tk.Frame):
         self.dataListbox.delete(0, tk.END)
         for record in range(0, len(self.controller.selectedTeams)):
             row = self.controller.selectedTeams[record]
-            self.dataListbox.insert(tk.END, row)#
+            self.dataListbox.insert(tk.END, row)
 
     def removeTeam(self, test=None):
         if len(self.controller.selectedTeams) > 0:
