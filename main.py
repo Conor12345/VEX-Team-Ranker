@@ -164,9 +164,10 @@ class Home(tk.Frame):
         selectedTeamsLabel = tk.Label(self.dataGrid, text="Currently selected teams:", font=global_variables.text())
         selectedTeamsLabel.grid(row=0, column=0, columnspan=2)
 
-        self.dataListbox = tk.Listbox(self.dataGrid, width=10, height=20)
+        self.dataListbox = tk.Listbox(self.dataGrid, width=10, height=16)
         self.dataListbox.grid(row=2, column=0, rowspan=7)
         self.dataListbox.config(font=global_variables.text(16))
+
 
         self.removeTeamButton = tk.Button(self.dataGrid, text="Remove selected team", font=global_variables.text(16), command=self.removeTeam)
         self.removeTeamButton.grid(row=2, column=1)
@@ -199,7 +200,7 @@ class Home(tk.Frame):
         self.finalSeasonMenu.config(font=global_variables.text(12))
 
         self.beginButton = tk.Button(self.dataGrid, text="Begin analysis", font=global_variables.text())
-        self.beginButton.grid(row=8, column=0, columnspan=3)
+        self.beginButton.grid(row=8, column=1, columnspan=2)
 
     def updateEventMenu(self, test):
         if self.currentSeasonVar.get() != "Country:":
