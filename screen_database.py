@@ -44,26 +44,26 @@ class Database(tk.Frame):
         if self.currentPage is not None:
             self.currentPage.grid_forget()
         self.currentPage = GeneralData(self, "tblEvents")
-        self.currentPage.grid(row=3, column=0)
+        self.currentPage.grid(row=3, column=0, columnspan=5)
 
     def show_matches(self):
         self.currentPage.grid_forget()
         self.currentPage = GeneralData(self, "tblMatches")
-        self.currentPage.grid(row=3, column=0)
+        self.currentPage.grid(row=3, column=0, columnspan=5)
 
     def show_teams(self):
         self.currentPage.grid_forget()
         self.currentPage = GeneralData(self, "tblTeams")
-        self.currentPage.grid(row=3, column=0)
+        self.currentPage.grid(row=3, column=0, columnspan=5)
 
     def show_users(self):
         if self.controller.isAdmin:
             self.currentPage.grid_forget()
             self.currentPage = GeneralData(self, "tblUsers")
-            self.currentPage.grid(row=3, column=0)
+            self.currentPage.grid(row=3, column=0, columnspan=5)
         else:
-            print("Error - Insufficient permissions")
-            #TODO make proper error message
+            errorLabel = tk.Label(self.smallMenu, text="ERROR - Insufficient permissions", font=global_variables.text(16))
+            errorLabel.grid(row=1, column=4)
 
 
 class GeneralData(tk.Frame):
@@ -85,11 +85,17 @@ class GeneralData(tk.Frame):
         startRow = 1
         self.searchBoxes = []
         for searchItem in range(len(self.columnNames)):
-            label = tk.Label(self, text=self.columnNames[searchItem], font=global_variables.text(12))
+            label = tk.Label(self, text=self.columnNames[searchItem], font=global_variables.text(14))
             label.grid(row=searchItem + startRow, column=0)
 
-            self.searchBoxes.append(tk.Entry(self, font=global_variables.text(12)))
+            self.searchBoxes.append(tk.Entry(self, font=global_variables.text(14)))
             self.searchBoxes[searchItem].grid(row=searchItem + startRow, column=1)
 
-    def updateSearch(self):
+        self.refreshButton = tk.Button(self, text="Search", font=global_variables.text(14), command=self.updateData)
+        self.refreshButton.grid(row=len(self.columnNames) + 1, column=0, columnspan=2)
+
+        self.dataBox = tk.Listbox(self, width=150, height=20)
+        self.dataBox.grid(row=1, column=3, rowspan=10)
+
+    def updateData(self):
         pass
