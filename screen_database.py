@@ -1,5 +1,6 @@
 import sqlite3
 import tkinter as tk
+from math import ceil
 
 import global_variables
 
@@ -79,6 +80,8 @@ class GeneralData(tk.Frame):
         for column in columnNames:
             self.columnNames.append(column[1])
 
+        self.rowWidth = int(150 / len(self.columnNames))
+
         tableName = tk.Label(self, text=tblName + " - Search", font=global_variables.text())
         tableName.grid(row=0, column=0, columnspan=2)
 
@@ -98,20 +101,68 @@ class GeneralData(tk.Frame):
         self.dataBox.grid(row=1, column=2, rowspan=10)
         self.dataBox.config(font=global_variables.text(12))
 
+        self.updateData()
+
     def updateData(self):
+        noSearches = True
+        searches = []
+        for searchTerm in self.searchBoxes:
+            if searchTerm.get() != "":
+                noSearches = False
+            searches.append(searchTerm.get())
+
+        query = "SELECT * FROM " + self.tblName
+        if not noSearches:
+            first = True
+            for i in range(0, len(searches)):
+                if first:
+                    if searches[i] != "":
+                        query += " WHERE " + self.columnNames[i] + " = '" + searches[i] + "'"
+                        first = False
+                else:
+                    if searches[i] != "":
+                        query += " AND " + self.columnNames[i] + " = '" + searches[i] + "'"
+
         db = sqlite3.connect("database.db")
         c = db.cursor()
-        results = c.execute("SELECT * FROM " + self.tblName).fetchall()
+        results = c.execute(query).fetchall()
 
         self.dataBox.delete(0, tk.END)
         row = ""
         for header in self.columnNames:
-            row += str(header).ljust(20, " ")
+            row += str(header).ljust(self.rowWidth, " ")
         self.dataBox.insert(tk.END, row)
         self.dataBox.insert(tk.END, "")
 
-        for result in results:
-            row = ""
+        for result in results: #TODO stop printing user password hashes
+            rows = [""]
             for record in result:
-                row += str(record).ljust(20, " ")
-            self.dataBox.insert(tk.END, row)
+                if len(str(record)) <= self.rowWidth:
+                    rows[0] += str(record).ljust(self.rowWidth, " ")
+                else:
+                    longestRecord = global_variables.longestStringInArray(result)
+                    rowsNeeded = int(ceil((longestRecord / self.rowWidth))) + 1
+                    rows = ["" for i in range(rowsNeeded)]
+                    for i in range(len(result)):
+                        if len(str(result[i])) <= self.rowWidth:
+                            rows[0] += str(result[i]).ljust(self.rowWidth, " ")
+                            for j in range(1, rowsNeeded):
+                                rows[j] += self.rowWidth * " "
+                        else:
+                            toPlace = result[i].split(" ")
+                            for k in range(rowsNeeded):
+                                currentLine = ""
+                                while len(toPlace) > 0:
+                                    if len(currentLine + toPlace[0]) <= self.rowWidth:
+                                        currentLine += toPlace[0] + " "
+                                        del toPlace[0]
+                                    else:
+                                        rows[k] += currentLine.ljust(self.rowWidth, " ")
+                                        currentLine = ""
+                                        break
+                                if currentLine != "":
+                                    rows[k] += currentLine.ljust(self.rowWidth, " ")
+                    break
+
+            for row in rows: #TODO fix trailing blank lines, somehow....
+                self.dataBox.insert(tk.END, row)
