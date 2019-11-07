@@ -88,7 +88,7 @@ class GeneralData(tk.Frame):
             label = tk.Label(self, text=self.columnNames[searchItem], font=global_variables.text(12))
             label.grid(row=searchItem + startRow, column=0)
 
-            self.searchBoxes.append(tk.Entry(self, font=global_variables.text(12), command=self.updateSearch))
+            self.searchBoxes.append(tk.Entry(self, font=global_variables.text(12)))
             self.searchBoxes[searchItem].grid(row=searchItem + startRow, column=1)
 
     def updateSearch(self):
