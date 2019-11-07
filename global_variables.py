@@ -12,3 +12,10 @@ def countries():
     for country in pycountry.countries:
         data.append(country.name)
     return tuple(data)
+
+def longestStringInArray(array):
+    longest = 0
+    for item in array:
+        if len(str(item)) > longest:
+            longest = len(str(item))
+    return longest
