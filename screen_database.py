@@ -95,7 +95,23 @@ class GeneralData(tk.Frame):
         self.refreshButton.grid(row=len(self.columnNames) + 1, column=0, columnspan=2)
 
         self.dataBox = tk.Listbox(self, width=150, height=20)
-        self.dataBox.grid(row=1, column=3, rowspan=10)
+        self.dataBox.grid(row=1, column=2, rowspan=10)
+        self.dataBox.config(font=global_variables.text(12))
 
     def updateData(self):
-        pass
+        db = sqlite3.connect("database.db")
+        c = db.cursor()
+        results = c.execute("SELECT * FROM " + self.tblName).fetchall()
+
+        self.dataBox.delete(0, tk.END)
+        row = ""
+        for header in self.columnNames:
+            row += str(header).ljust(20, " ")
+        self.dataBox.insert(tk.END, row)
+        self.dataBox.insert(tk.END, "")
+
+        for result in results:
+            row = ""
+            for record in result:
+                row += str(record).ljust(20, " ")
+            self.dataBox.insert(tk.END, row)
