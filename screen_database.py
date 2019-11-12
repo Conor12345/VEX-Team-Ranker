@@ -2,8 +2,8 @@ import sqlite3
 import tkinter as tk
 from math import ceil
 
-import global_variables
 import event_management
+import global_variables
 
 
 class Database(tk.Frame):
@@ -12,6 +12,7 @@ class Database(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         self.currentPage = None
+        self.switch = None
 
         self.navbarGrid = tk.Frame(self, padx=10, pady=10)
         self.navbarGrid.grid(row=0, column=0)
@@ -87,41 +88,47 @@ class GeneralData(tk.Frame):
         tableName = tk.Label(self, text=tblName + " - Search", font=global_variables.text())
         tableName.grid(row=0, column=0, columnspan=2)
 
-        startRow = 1
+        self.startRow = 1
         self.searchBoxes = []
         for searchItem in range(len(self.columnNames)):
             label = tk.Label(self, text=self.columnNames[searchItem], font=global_variables.text(14))
-            label.grid(row=searchItem + startRow, column=0)
+            label.grid(row=searchItem + self.startRow, column=0)
 
             self.searchBoxes.append(tk.Entry(self, font=global_variables.text(14)))
-            self.searchBoxes[searchItem].grid(row=searchItem + startRow, column=1)
+            self.searchBoxes[searchItem].grid(row=searchItem + self.startRow, column=1)
 
         self.refreshButton = tk.Button(self, text="Search", font=global_variables.text(14), command=self.updateData)
         self.refreshButton.grid(row=len(self.columnNames) + 1, column=0, columnspan=2)
 
-        #TODO add specific buttons for each page
-        startRow = len(self.columnNames) + 2 #Increment after each use
+        if self.parent.switch is not None:
+            self.searchBoxes[0].insert(0, self.parent.switch)
+            self.parent.switch = None
+
+        self.startRow = len(self.columnNames) + 2  # Increment after each use
 
         if self.tblName == "tblEvents":
             self.refreshButton = tk.Button(self, text="Update recent events", font=global_variables.text(14), command=self.refreshEventData)
-            self.refreshButton.grid(row=startRow, column=0, columnspan=2)
-            startRow += 1
-            # Show matches - need a way to passthrough search terms
+            self.refreshButton.grid(row=self.startRow, column=0, columnspan=2)
+            self.startRow += 1
+
+            self.showMatches = tk.Button(self, text="Show corresponding matches", font=global_variables.text(14), command=self.switchToMatchView)
+            self.showMatches.grid(row=self.startRow, column=0, columnspan=2)
+            self.startRow += 1
+
         elif self.tblName == "tblMatches":
-            pass
-            # Show event
+            self.showEvents = tk.Button(self, text="Show corresponding event", font=global_variables.text(14), command=self.switchToEventView)
+            self.showEvents.grid(row=self.startRow, column=0, columnspan=2)
+            self.startRow += 1
+
         elif self.tblName == "tblTeams":
             pass
-            # Refresh Team data
 
-        elif self.tblName == "tblteams":
+        elif self.tblName == "tblUsers":  # TODO add buttons for new user and update user
             pass
-            # New user - actually make the screen - see screen_users.py
-            # Update user
 
         self.dataBox = tk.Listbox(self, width=150, height=40)
         self.dataBox.grid(row=1, column=2, rowspan=10)
-        self.dataBox.config(font=global_variables.text(12))
+        self.dataBox.config(font=("Courier", 12))
 
         self.updateData()
 
@@ -156,7 +163,7 @@ class GeneralData(tk.Frame):
         self.dataBox.insert(tk.END, row)
         self.dataBox.insert(tk.END, "")
 
-        for result in results: #TODO fix spaces width
+        for result in results:
             rows = [""]
             for record in result:
                 if len(str(record)) <= self.rowWidth:
@@ -193,3 +200,16 @@ class GeneralData(tk.Frame):
     def refreshEventData(self):
         event_management.refresh_recent_events()
         self.updateData()
+
+    def switchToMatchView(self):
+        selectedEventID = self.dataBox.selection_get()[0:14]
+        if global_variables.isOnlySpaces([selectedEventID]):
+            errorLabel = tk.Label(self, text="ERROR - Select record with an EventID", font=global_variables.text(12))
+            errorLabel.grid(row=self.startRow, column=0, columnspan=2)
+        else:
+            self.parent.switch = selectedEventID
+        self.parent.show_matches()
+
+    def switchToEventView(self):
+        self.parent.switch = self.dataBox.selection_get()[0:14]
+        self.parent.show_events()
