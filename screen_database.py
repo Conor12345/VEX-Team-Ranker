@@ -3,6 +3,7 @@ import tkinter as tk
 from math import ceil
 
 import global_variables
+import event_management
 
 
 class Database(tk.Frame):
@@ -41,8 +42,6 @@ class Database(tk.Frame):
 
         self.show_events()
 
-        #TODO add user creation screens
-
     def show_events(self):
         if self.currentPage is not None:
             self.currentPage.grid_forget()
@@ -73,6 +72,7 @@ class GeneralData(tk.Frame):
     def __init__(self, parent, tblName):
         tk.Frame.__init__(self, parent)
 
+        self.parent = parent
         self.tblName = tblName
         self.columnNames = []
 
@@ -99,7 +99,27 @@ class GeneralData(tk.Frame):
         self.refreshButton = tk.Button(self, text="Search", font=global_variables.text(14), command=self.updateData)
         self.refreshButton.grid(row=len(self.columnNames) + 1, column=0, columnspan=2)
 
-        self.dataBox = tk.Listbox(self, width=150, height=20)
+        #TODO add specific buttons for each page
+        startRow = len(self.columnNames) + 2 #Increment after each use
+
+        if self.tblName == "tblEvents":
+            self.refreshButton = tk.Button(self, text="Update recent events", font=global_variables.text(14), command=self.refreshEventData)
+            self.refreshButton.grid(row=startRow, column=0, columnspan=2)
+            startRow += 1
+            # Show matches - need a way to passthrough search terms
+        elif self.tblName == "tblMatches":
+            pass
+            # Show event
+        elif self.tblName == "tblTeams":
+            pass
+            # Refresh Team data
+
+        elif self.tblName == "tblteams":
+            pass
+            # New user - actually make the screen - see screen_users.py
+            # Update user
+
+        self.dataBox = tk.Listbox(self, width=150, height=40)
         self.dataBox.grid(row=1, column=2, rowspan=10)
         self.dataBox.config(font=global_variables.text(12))
 
@@ -136,7 +156,7 @@ class GeneralData(tk.Frame):
         self.dataBox.insert(tk.END, row)
         self.dataBox.insert(tk.END, "")
 
-        for result in results: #TODO stop printing user password hashes
+        for result in results: #TODO fix spaces width
             rows = [""]
             for record in result:
                 if len(str(record)) <= self.rowWidth:
@@ -146,7 +166,7 @@ class GeneralData(tk.Frame):
                     rowsNeeded = int(ceil((longestRecord / self.rowWidth))) + 1
                     rows = ["" for i in range(rowsNeeded)]
                     for i in range(len(result)):
-                        if len(str(result[i])) <= self.rowWidth:
+                        if len(str(result[i])) <= self.rowWidth - 2:
                             rows[0] += str(result[i]).ljust(self.rowWidth, " ")
                             for j in range(1, rowsNeeded):
                                 rows[j] += self.rowWidth * " "
@@ -155,7 +175,7 @@ class GeneralData(tk.Frame):
                             for k in range(rowsNeeded):
                                 currentLine = ""
                                 while len(toPlace) > 0:
-                                    if len(currentLine + toPlace[0]) <= self.rowWidth:
+                                    if len(currentLine + toPlace[0]) <= self.rowWidth - 2:
                                         currentLine += toPlace[0] + " "
                                         del toPlace[0]
                                     else:
@@ -169,3 +189,7 @@ class GeneralData(tk.Frame):
             for row in rows:
                 if not global_variables.isOnlySpaces(row):
                     self.dataBox.insert(tk.END, row)
+
+    def refreshEventData(self):
+        event_management.refresh_recent_events()
+        self.updateData()
