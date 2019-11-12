@@ -42,6 +42,7 @@ def refresh_recent_events():
     for event in results.fetchall():
          if not match_management.check_event_has_matches(event[0]):
              refresh_event(event[0])
+    #TODO make this function add any new events also
 
 def get_event_list(country, season):
     db = sqlite3.connect("database.db")
