@@ -1,4 +1,5 @@
 import pycountry
+import re
 
 def text(size=20):
     return ("Verdana", size)
@@ -19,3 +20,9 @@ def longestStringInArray(array):
         if len(str(item)) > longest:
             longest = len(str(item))
     return longest
+
+def isOnlySpaces(listIn):
+    for item in listIn:
+        if not bool(re.match("^ +$", item)):
+            return False
+    return True

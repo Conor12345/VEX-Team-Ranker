@@ -41,6 +41,8 @@ class Database(tk.Frame):
 
         self.show_events()
 
+        #TODO add user creation screens
+
     def show_events(self):
         if self.currentPage is not None:
             self.currentPage.grid_forget()
@@ -164,5 +166,6 @@ class GeneralData(tk.Frame):
                                     rows[k] += currentLine.ljust(self.rowWidth, " ")
                     break
 
-            for row in rows: #TODO fix trailing blank lines, somehow....
-                self.dataBox.insert(tk.END, row)
+            for row in rows:
+                if not global_variables.isOnlySpaces(row):
+                    self.dataBox.insert(tk.END, row)
