@@ -40,6 +40,7 @@ def create_user(UserName: str, Password: str, TeamNum: str, Admin: int):
     c = db.cursor()
     c.execute('INSERT INTO tblUsers (UserName, Password, TeamNum, Admin) VALUES (?, ?, ?, ?)'   ,(UserName, PassW, TeamNum, Admin))
     db.commit()
+    return True
 
 def get_user_data(UserName):
     db = sqlite3.connect("database.db")
