@@ -1,5 +1,10 @@
-import sqlite3, hashlib, binascii, os
+import binascii
+import hashlib
+import os
+import sqlite3
+
 import team_management
+
 
 def hash_password(password):
     # source https://www.vitoshacademy.com/hashing-passwords-in-python/
@@ -28,6 +33,8 @@ def create_user(UserName: str, Password: str, TeamNum: str, Admin: int):
 
     if not team_management.check_team_presence(TeamNum): # Checks to see if the team is already in tblTeams
         team_management.import_team(TeamNum) # IF not in table, add team to table
+        if not team_management.check_team_presence(TeamNum):
+            return False
 
     db = sqlite3.connect("database.db")
     c = db.cursor()
