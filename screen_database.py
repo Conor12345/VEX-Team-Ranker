@@ -4,6 +4,7 @@ from math import ceil
 
 import event_management
 import global_variables
+import screen_users
 
 
 class Database(tk.Frame):
@@ -68,6 +69,10 @@ class Database(tk.Frame):
             errorLabel = tk.Label(self.smallMenu, text="ERROR - Insufficient permissions", font=global_variables.text(16))
             errorLabel.grid(row=1, column=4)
 
+    def show_new_users(self):
+        self.currentPage.grid_forget()
+        self.currentPage = screen_users.NewUser(self)
+        self.currentPage.grid(row=3, column=0, columnspan=5)
 
 class GeneralData(tk.Frame):
     def __init__(self, parent, tblName):
@@ -124,7 +129,13 @@ class GeneralData(tk.Frame):
             pass
 
         elif self.tblName == "tblUsers":  # TODO add buttons for new user and update user
-            pass
+            self.newUserButton = tk.Button(self, text="New user", font=global_variables.text(14), command=self.parent.show_new_users)
+            self.newUserButton.grid(row=self.startRow, column=0, columnspan=2)
+            self.startRow += 1
+
+            self.updateUserButton = tk.Button(self, text="Update user", font=global_variables.text(14))
+            self.updateUserButton.grid(row=self.startRow, column=0, columnspan=2)
+            self.startRow += 1
 
         self.dataBox = tk.Listbox(self, width=150, height=40)
         self.dataBox.grid(row=1, column=2, rowspan=10)
