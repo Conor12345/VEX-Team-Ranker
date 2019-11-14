@@ -47,12 +47,18 @@ class NewUser(tk.Frame):
             self.parent.show_users()
 
         else:
-            errorLabel = tk.Label(self, text="ERROR - Specified Team does not exist", font=global_variables.text(12))
+            errorLabel = tk.Label(self, text="ERROR - Account creation failed", font=global_variables.text(12))
             errorLabel.grid(row=7, column=0, columnspan=2)
 
 class UpdateUser(NewUser): #TODO modify new user frame to work as update user
-    def __init__(self, parent, UserID):
+    def __init__(self, parent, UserName):
         NewUser.__init__(self, parent)
+
+        self.originalUserData = account_management.get_user_data(UserName)
+        self.originalUserData[2] = ""
+
+        self.entryBoxes[0][1].insert(0, self.originalUserData[1])
+        self.entryBoxes[3][1].insert(0, self.originalUserData[3])
 
         for button in self.buttons:
             button.grid_forget()
@@ -62,6 +68,8 @@ class UpdateUser(NewUser): #TODO modify new user frame to work as update user
 
         self.buttons.append(tk.Button(self, text="Delete User", font=global_variables.text(16), command=self.deleteUserCommand))
         self.buttons[1].grid(row=7, column=0, columnspan=2)
+
+        #TODO make the checkboxes actually work
 
     def updateUserCommand(self):
         pass

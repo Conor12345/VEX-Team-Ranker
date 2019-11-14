@@ -4,6 +4,7 @@ from math import ceil
 
 import event_management
 import global_variables
+import account_management
 import screen_users
 
 #TODO fix everything to use USERID not username as unique identifier
@@ -75,9 +76,9 @@ class Database(tk.Frame):
         self.currentPage = screen_users.NewUser(self)
         self.currentPage.grid(row=3, column=0, columnspan=5)
 
-    def show_update_users(self, UserID):
+    def show_update_users(self, UserName):
         self.currentPage.grid_forget()
-        self.currentPage = screen_users.UpdateUser(self, UserID)
+        self.currentPage = screen_users.UpdateUser(self, UserName)
         self.currentPage.grid(row=3, column=0, columnspan=5)
 
 class GeneralData(tk.Frame):
@@ -244,5 +245,8 @@ class GeneralData(tk.Frame):
         self.parent.show_events()
 
     def updateUserScreen(self):
-        UserID = 1 #TODO Make this return an actual userID thicko
-        self.parent.show_update_users(UserID)
+        UserName = self.dataBox.selection_get()[self.rowWidth:2 * self.rowWidth].strip()
+        if not account_management.get_user_data(UserName):
+            print("ERROR - User not found") #TODO make proper erorr msg
+        else:
+            self.parent.show_update_users(UserName)
