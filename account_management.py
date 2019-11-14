@@ -32,12 +32,8 @@ def create_user(UserName: str, Password: str, TeamNum: str, Admin: int):
     PassW = hash_password(Password)
 
     if not team_management.check_team_presence(TeamNum): # Checks to see if the team is already in tblTeams
-        team_management.import_team(TeamNum) # IF not in table, add team to table
-        if not team_management.check_team_presence(TeamNum):
+        if not team_management.import_team(TeamNum): # IF not in table, add team to tabl
             return False
-
-    if not get_user_data(UserName):
-        return False
 
     db = sqlite3.connect("database.db")
     c = db.cursor()
