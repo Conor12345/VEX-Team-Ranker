@@ -165,7 +165,7 @@ class GeneralData(tk.Frame):
 
         db = sqlite3.connect("database.db")
         c = db.cursor()
-        results = c.execute(query).fetchall()
+        results = c.execute(query + " ORDER BY " + self.columnNames[0] + " DESC").fetchall() #TODO make this sorta different for different tables
 
         self.dataBox.delete(0, tk.END)
         row = ""
