@@ -94,3 +94,9 @@ def update_user_data(CurrentUserName, NewUserName=None, NewTeamNum=None, NewAdmi
         c = db.cursor()
         c.execute('UPDATE tblUsers set Admin=? where UserName=?', (NewAdmin, CurrentUserName))
         db.commit()
+
+def delete_user(UserName):
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    c.execute("DELETE FROM tblUsers WHERE UserName = ?", (UserName,))
+    db.commit()
