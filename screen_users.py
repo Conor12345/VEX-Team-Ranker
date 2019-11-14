@@ -2,6 +2,7 @@ import tkinter as tk
 
 import account_management
 import global_variables
+import team_management
 
 
 class NewUser(tk.Frame):
@@ -50,7 +51,7 @@ class NewUser(tk.Frame):
             errorLabel = tk.Label(self, text="ERROR - Account creation failed", font=global_variables.text(12))
             errorLabel.grid(row=7, column=0, columnspan=2)
 
-class UpdateUser(NewUser): #TODO modify new user frame to work as update user
+class UpdateUser(NewUser):
     def __init__(self, parent, UserName):
         NewUser.__init__(self, parent)
 
@@ -69,10 +70,43 @@ class UpdateUser(NewUser): #TODO modify new user frame to work as update user
         self.buttons.append(tk.Button(self, text="Delete User", font=global_variables.text(16), command=self.deleteUserCommand))
         self.buttons[1].grid(row=7, column=0, columnspan=2)
 
-        #TODO make the checkboxes actually work
+        if self.originalUserData[4] == 1:
+            self.entryBoxes[4][1].select()
 
     def updateUserCommand(self):
-        pass
+        data = [None for i in range(3)]
+
+        if self.entryBoxes[0][1].get() != self.originalUserData[1]:
+            data[0] = self.entryBoxes[0][1].get()
+
+        if self.entryBoxes[3][1].get() != self.originalUserData[3]:
+            if not team_management.check_team_presence(self.entryBoxes[3][1].get()):
+                if not team_management.import_team(self.entryBoxes[3][1].get()):
+                    errorLabel = tk.Label(self, text="ERROR - Team does not exist", font=global_variables.text(12))
+                    errorLabel.grid(row=8, column=0, columnspan=2)
+                    return False
+            data[1] = self.entryBoxes[3][1].get()
+
+        if self.AdminVar.get() != self.originalUserData[4]:
+            data[2] = self.AdminVar.get()
+
+        if data != [None for i in range(3)]:
+            account_management.update_user_data(self.originalUserData[1], data[0], data[1], data[2])
+
+        if self.entryBoxes[1][1].get() != "":
+            if self.entryBoxes[1][1].get() != self.entryBoxes[2][1].get():
+                errorLabel = tk.Label(self, text="ERROR - Passwords do not match", font=global_variables.text(12))
+                errorLabel.grid(row=8, column=0, columnspan=2)
+                return False
+            else:
+                if data[0] is not None:
+                    userName = data[0]
+                else:
+                    userName = self.originalUserData[1]
+                account_management.update_user_password(userName, self.entryBoxes[1][1].get())
+
+        self.parent.show_users()
 
     def deleteUserCommand(self):
-        pass
+        account_management.delete_user(self.originalUserData[1])
+        self.parent.show_users()

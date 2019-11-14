@@ -2,12 +2,11 @@ import sqlite3
 import tkinter as tk
 from math import ceil
 
+import account_management
 import event_management
 import global_variables
-import account_management
 import screen_users
 
-#TODO fix everything to use USERID not username as unique identifier
 
 class Database(tk.Frame):
     def __init__(self, parent, controller):
@@ -247,6 +246,8 @@ class GeneralData(tk.Frame):
     def updateUserScreen(self):
         UserName = self.dataBox.selection_get()[self.rowWidth:2 * self.rowWidth].strip()
         if not account_management.get_user_data(UserName):
-            print("ERROR - User not found") #TODO make proper erorr msg
+            errorLabel = tk.Label(self, text="ERROR - Select a user to update", font=global_variables.text(12))
+            errorLabel.grid(row=self.startRow, column=0, columnspan=2)
+            self.startRow += 1
         else:
             self.parent.show_update_users(UserName)
