@@ -36,6 +36,9 @@ def create_user(UserName: str, Password: str, TeamNum: str, Admin: int):
         if not team_management.check_team_presence(TeamNum):
             return False
 
+    if not get_user_data(UserName):
+        return False
+
     db = sqlite3.connect("database.db")
     c = db.cursor()
     c.execute('INSERT INTO tblUsers (UserName, Password, TeamNum, Admin) VALUES (?, ?, ?, ?)'   ,(UserName, PassW, TeamNum, Admin))
@@ -76,7 +79,7 @@ def update_user_data(CurrentUserName, NewUserName=None, NewTeamNum=None, NewAdmi
         c.execute('UPDATE tblUsers set UserName=? where UserName=?', (NewUserName, CurrentUserName))
         db.commit()
 
-    elif NewTeamNum is not None:
+    if NewTeamNum is not None:
         if team_management.check_team_presence(NewTeamNum):
             team_management.refresh_team(NewTeamNum)
         else:
@@ -86,7 +89,7 @@ def update_user_data(CurrentUserName, NewUserName=None, NewTeamNum=None, NewAdmi
         c.execute('UPDATE tblUsers set TeamNum=? where UserName=?', (NewTeamNum, CurrentUserName))
         db.commit()
 
-    elif NewAdmin is not None:
+    if NewAdmin is not None:
         db = sqlite3.connect("database.db")
         c = db.cursor()
         c.execute('UPDATE tblUsers set Admin=? where UserName=?', (NewAdmin, CurrentUserName))
