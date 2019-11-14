@@ -6,6 +6,7 @@ import event_management
 import global_variables
 import screen_users
 
+#TODO fix everything to use USERID not username as unique identifier
 
 class Database(tk.Frame):
     def __init__(self, parent, controller):
@@ -74,6 +75,11 @@ class Database(tk.Frame):
         self.currentPage = screen_users.NewUser(self)
         self.currentPage.grid(row=3, column=0, columnspan=5)
 
+    def show_update_users(self, UserID):
+        self.currentPage.grid_forget()
+        self.currentPage = screen_users.UpdateUser(self, UserID)
+        self.currentPage.grid(row=3, column=0, columnspan=5)
+
 class GeneralData(tk.Frame):
     def __init__(self, parent, tblName):
         tk.Frame.__init__(self, parent)
@@ -128,12 +134,12 @@ class GeneralData(tk.Frame):
         elif self.tblName == "tblTeams":
             pass
 
-        elif self.tblName == "tblUsers":  # TODO add buttons for new user and update user
+        elif self.tblName == "tblUsers":
             self.newUserButton = tk.Button(self, text="New user", font=global_variables.text(14), command=self.parent.show_new_users)
             self.newUserButton.grid(row=self.startRow, column=0, columnspan=2)
             self.startRow += 1
 
-            self.updateUserButton = tk.Button(self, text="Update user", font=global_variables.text(14))
+            self.updateUserButton = tk.Button(self, text="Update user", font=global_variables.text(14), command=self.updateUserScreen)
             self.updateUserButton.grid(row=self.startRow, column=0, columnspan=2)
             self.startRow += 1
 
@@ -157,15 +163,27 @@ class GeneralData(tk.Frame):
             for i in range(0, len(searches)):
                 if first:
                     if searches[i] != "":
-                        query += " WHERE " + self.columnNames[i] + " = '" + searches[i] + "'"
+                        query += " WHERE " + self.columnNames[i] + " LIKE '%" + searches[i] + "%'"
                         first = False
                 else:
                     if searches[i] != "":
-                        query += " AND " + self.columnNames[i] + " = '" + searches[i] + "'"
+                        query += " AND " + self.columnNames[i] + " LIKE '%" + searches[i] + "%'"
+
+        if self.tblName == "tblEvents":
+            query += " ORDER BY Date DESC"
+
+        elif self.tblName == "tblMatches":
+            query += " ORDER BY EventID DESC, MatchLevel ASC, MatchNum ASC"
+
+        elif self.tblName == "tblTeams":
+            query += " ORDER BY TeamNum"
+
+        elif self.tblName == "tblUsers":
+            query += " ORDER BY UserID"
 
         db = sqlite3.connect("database.db")
         c = db.cursor()
-        results = c.execute(query + " ORDER BY " + self.columnNames[0] + " DESC").fetchall() #TODO make this sorta different for different tables
+        results = c.execute(query).fetchall()
 
         self.dataBox.delete(0, tk.END)
         row = ""
@@ -224,3 +242,7 @@ class GeneralData(tk.Frame):
     def switchToEventView(self):
         self.parent.switch = self.dataBox.selection_get()[0:14]
         self.parent.show_events()
+
+    def updateUserScreen(self):
+        UserID = 1 #TODO Make this return an actual userID thicko
+        self.parent.show_update_users(UserID)

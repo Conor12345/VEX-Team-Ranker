@@ -50,7 +50,21 @@ class NewUser(tk.Frame):
             errorLabel = tk.Label(self, text="ERROR - Specified Team does not exist", font=global_variables.text(12))
             errorLabel.grid(row=7, column=0, columnspan=2)
 
-            
+class UpdateUser(NewUser): #TODO modify new user frame to work as update user
+    def __init__(self, parent, UserID):
+        NewUser.__init__(self, parent)
 
+        for button in self.buttons:
+            button.grid_forget()
 
-#TODO modify new user frame to work as update user
+        self.buttons = [tk.Button(self, text="Update User", font=global_variables.text(16), command=self.updateUserCommand)]
+        self.buttons[0].grid(row=6, column=0, columnspan=2)
+
+        self.buttons.append(tk.Button(self, text="Delete User", font=global_variables.text(16), command=self.deleteUserCommand))
+        self.buttons[1].grid(row=7, column=0, columnspan=2)
+
+    def updateUserCommand(self):
+        pass
+
+    def deleteUserCommand(self):
+        pass
