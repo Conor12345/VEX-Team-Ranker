@@ -15,28 +15,32 @@ def check_event_presence(EventID):
     db.commit()
     return len(results.fetchall()) == 1
 
-def import_event(query): # Loads event data base upon a query such as "Country=United Kingdom&season=Turning Point"
-    data = api_query.get_event_data(query) # Query the API using a function
-    if not data: # Ensures the API has returned some data
+
+def import_event(query):  # Loads event data base upon a query such as "Country=United Kingdom&season=Turning Point"
+    data = api_query.get_event_data(query)  # Query the API using a function
+    if not data:  # Ensures the API has returned some data
         return False
     else:
-        db = sqlite3.connect("database.db") # Loading database
+        db = sqlite3.connect("database.db")  # Loading database
         c = db.cursor()
-        for event in data: # Checks each event return by database query
-            if not check_event_presence(event["sku"]): # Checks if the event is already present in the event database
-                c.execute("INSERT INTO tblEvents VALUES (?, ?, ?, ?, ?, ?, ?)", (event["sku"], event["name"], event["loc_city"], event["loc_postcode"], event["season"], event["start"][0:10], event["loc_country"]))
+        for event in data:  # Checks each event return by database query
+            if not check_event_presence(event["sku"]):  # Checks if the event is already present in the event database
+                c.execute("INSERT INTO tblEvents VALUES (?, ?, ?, ?, ?, ?, ?)",
+                          (event["sku"], event["name"], event["loc_city"], event["loc_postcode"], event["season"], event["start"][0:10], event["loc_country"]))
                 db.commit()
-                match_management.import_match(event["sku"]) # Passes the EventID to the match import function to import all matches which took place at the event
+                match_management.import_match(event["sku"])  # Passes the EventID to the match import function to import all matches which took place at the event
             elif not match_management.check_event_has_matches(event["sku"]):
-                refresh_event(event["sku"]) # Updates the data if it is already in the database
+                refresh_event(event["sku"])  # Updates the data if it is already in the database
 
-def refresh_event(EventID): # Updates the data for the specified event
+
+def refresh_event(EventID):  # Updates the data for the specified event
     db = sqlite3.connect("database.db")
     c = db.cursor()
-    c.execute('DELETE FROM tblEvents WHERE EventID = (?)', (EventID,)) # Removes the event from the database
+    c.execute('DELETE FROM tblEvents WHERE EventID = (?)', (EventID,))  # Removes the event from the database
     c.execute('DELETE FROM tblMatches WHERE EventID = (?)', (EventID,))
     db.commit()
-    import_event("sku=" + EventID) # Imports the event as if it was never present
+    import_event("sku=" + EventID)  # Imports the event as if it was never present
+
 
 def refresh_recent_events():
     dateCheck = date.today() + relativedelta(months=-6)
@@ -44,18 +48,20 @@ def refresh_recent_events():
     c = db.cursor()
     results = c.execute("SELECT EventID FROM tblEvents where Date > (?)", (dateCheck,))
     for event in results.fetchall():
-         if not match_management.check_event_has_matches(event[0]):
-             refresh_event(event[0])
+        if not match_management.check_event_has_matches(event[0]):
+            refresh_event(event[0])
     import_event("season=current&country=United Kingdom")
+
 
 def get_event_list(country, season):
     db = sqlite3.connect("database.db")
     c = db.cursor()
-    results =  c.execute("SELECT EventName FROM tblEvents WHERE Country=(?) and Season=(?)", (country, season)).fetchall()
+    results = c.execute("SELECT EventName FROM tblEvents WHERE Country=(?) and Season=(?)", (country, season)).fetchall()
     data = []
     for event in results:
         data.append(event[0])
     return data
+
 
 def get_eventID(eventName):
     db = sqlite3.connect("database.db")
