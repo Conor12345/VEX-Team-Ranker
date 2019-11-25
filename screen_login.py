@@ -27,7 +27,6 @@ class Login(tk.Frame):
         self.submitButton.place(relx=0.5, rely=0.7, anchor="center")
 
         self.userBox.focus()
-        self.controller.bind("<Return>", self.submitLogin)
 
     def submitLogin(self, blank=None):
         if self.userBox.get() + self.passBox.get() == "": # Automatic login for testing purposes
