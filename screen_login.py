@@ -30,13 +30,13 @@ class Login(tk.Frame):
         self.controller.bind("<Return>", self.submitLogin)
 
     def submitLogin(self, blank=None):
-        if self.userBox.get() + self.passBox.get() == "":
+        if self.userBox.get() + self.passBox.get() == "": # Automatic login for testing purposes
             self.userBox.insert(0, "Admin")
             self.passBox.insert(0, "12345")
 
-        if account_management.verify_user_login(self.userBox.get(), self.passBox.get()):
-            self.controller.login_success(self.userBox.get())
-            self.controller.show_home()
+        if account_management.verify_user_login(self.userBox.get(), self.passBox.get()): # Checks whether the credentials are correct
+            self.controller.login_success(self.userBox.get()) # Stores user information
+            self.controller.show_home() # Switches to the home screen
         else:
-            errorMsg = tk.Label(self, text="ERROR - Login Unsuccessful", font=("Verdana", 18))
+            errorMsg = tk.Label(self, text="ERROR - Login Unsuccessful", font=("Verdana", 18)) # Prints error msg on screen
             errorMsg.place(relx=0.5, rely=0.8, anchor="center")
