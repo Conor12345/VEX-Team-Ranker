@@ -99,7 +99,10 @@ class GeneralData(tk.Frame):
         tableName = tk.Label(self, text=tblName + " - Search", font=global_variables.text())
         tableName.grid(row=0, column=0, columnspan=2)
 
-        self.startRow = 1
+        commaLabel = tk.Label(self, text="Use commas to separate search terms", font=global_variables.text(12))
+        commaLabel.grid(row=1, column=0, columnspan=2)
+
+        self.startRow = 2
         self.searchBoxes = []
         for searchItem in range(len(self.columnNames)):
             label = tk.Label(self, text=self.columnNames[searchItem], font=global_variables.text(14))
@@ -109,13 +112,13 @@ class GeneralData(tk.Frame):
             self.searchBoxes[searchItem].grid(row=searchItem + self.startRow, column=1)
 
         self.refreshButton = tk.Button(self, text="Search", font=global_variables.text(14), command=self.updateData)
-        self.refreshButton.grid(row=len(self.columnNames) + 1, column=0, columnspan=2)
+        self.refreshButton.grid(row=len(self.columnNames) + 2, column=0, columnspan=2)
 
         if self.parent.switch is not None:
             self.searchBoxes[0].insert(0, self.parent.switch)
             self.parent.switch = None
 
-        self.startRow = len(self.columnNames) + 2  # Increment after each use
+        self.startRow = len(self.columnNames) + 3  # Increment after each use
 
         if self.tblName == "tblEvents":
             self.refreshButton = tk.Button(self, text="Update recent events", font=global_variables.text(14), command=self.refreshEventData)
@@ -144,7 +147,7 @@ class GeneralData(tk.Frame):
             self.startRow += 1
 
         self.dataBox = tk.Listbox(self, width=150, height=40)
-        self.dataBox.grid(row=1, column=2, rowspan=10)
+        self.dataBox.grid(row=1, column=2, rowspan=20)
         self.dataBox.config(font=("Courier", 12))
 
         self.updateData()
@@ -155,19 +158,40 @@ class GeneralData(tk.Frame):
         for searchTerm in self.searchBoxes:
             if searchTerm.get() != "":
                 noSearches = False
-            searches.append(searchTerm.get())
+            searches.append(searchTerm.get().replace(" ", "").split(","))
 
         query = "SELECT * FROM " + self.tblName
         if not noSearches:
             first = True
             for i in range(0, len(searches)):
                 if first:
-                    if searches[i] != "":
-                        query += " WHERE " + self.columnNames[i] + " LIKE '%" + searches[i] + "%'"
-                        first = False
+                    if searches[i][0] != "":
+                        for searchTerm in searches[i]:
+                            if len(searches[i]) > 1:
+                                if searchTerm == searches[i][0]: # If its the search first term
+                                    query += " WHERE (" + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
+                                    first = False
+                                else:
+                                    query += " OR " + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
+                            else:
+                                query += " WHERE " + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
+                                first = False
+                        if len(searches[i]) > 1:
+                            query += ")"
                 else:
-                    if searches[i] != "":
-                        query += " AND " + self.columnNames[i] + " LIKE '%" + searches[i] + "%'"
+                    if searches[i][0] != "":
+                        for searchTerm in searches[i]:
+                            if len(searches[i]) > 1:
+                                if searchTerm == searches[i][0]: # If its the search first term
+                                    query += " AND (" + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
+                                    first = False
+                                else:
+                                    query += " OR " + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
+                            else:
+                                query += " AND " + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
+                                first = False
+                        if len(searches[i]) > 1:
+                            query += ")"
 
         if self.tblName == "tblEvents":
             query += " ORDER BY Date DESC"
