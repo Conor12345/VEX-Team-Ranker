@@ -9,9 +9,9 @@ def seasons():
             "Elevation", "Bridge Battle", "Nothing But Net", "Starstruck", "In The Zone", "Turning Point", "Tower Takeover"])
 
 def countries():
-    data = []
-    for country in pycountry.countries:
-        data.append(country.name)
+    data = ["United States", "Australia", "Canada", "China", "Colombia", "Hong Kong", "Mexico", "New Zealand", "Singapore", "United Kingdom"]
+    #for country in pycountry.countries:
+    #    data.append(country.name)
     return tuple(data)
 
 def longestStringInArray(array):
