@@ -44,6 +44,10 @@ class NewUser(tk.Frame):
             errorLabel = tk.Label(self, text="ERROR - Passwords do not match", font=global_variables.text(12))
             errorLabel.grid(row=7, column=0, columnspan=2)
 
+        elif len(self.entryBoxes[1][1].get()) < 8:
+            errorLabel = tk.Label(self, text="ERROR - Passwords must be atleast 8 characters", font=global_variables.text(12))
+            errorLabel.grid(row=7, column=0, columnspan=2)
+
         elif account_management.create_user(self.entryBoxes[0][1].get(), self.entryBoxes[1][1].get(), self.entryBoxes[3][1].get(), self.AdminVar.get()):
             self.parent.show_users()
 
@@ -96,6 +100,10 @@ class UpdateUser(NewUser):
         if self.entryBoxes[1][1].get() != "":
             if self.entryBoxes[1][1].get() != self.entryBoxes[2][1].get():
                 errorLabel = tk.Label(self, text="ERROR - Passwords do not match", font=global_variables.text(12))
+                errorLabel.grid(row=8, column=0, columnspan=2)
+                return False
+            elif len(self.entryBoxes[1][1].get()) < 8:
+                errorLabel = tk.Label(self, text="ERROR - Passwords must be atleast 8 characters", font=global_variables.text(12))
                 errorLabel.grid(row=8, column=0, columnspan=2)
                 return False
             else:
