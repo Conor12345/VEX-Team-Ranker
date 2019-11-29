@@ -94,7 +94,7 @@ class GeneralData(tk.Frame):
         for column in columnNames:
             self.columnNames.append(column[1])
 
-        self.rowWidth = int(150 / len(self.columnNames))
+        self.columnWidth = int(150 / len(self.columnNames)) # Calculate the maximum column width
 
         tableName = tk.Label(self, text=tblName + " - Search", font=global_variables.text())
         tableName.grid(row=0, column=0, columnspan=2)
@@ -163,36 +163,28 @@ class GeneralData(tk.Frame):
         query = "SELECT * FROM " + self.tblName
         if not noSearches:
             first = True
-            for i in range(0, len(searches)):
-                if first:
-                    if searches[i][0] != "":
-                        for searchTerm in searches[i]:
-                            if len(searches[i]) > 1:
-                                if searchTerm == searches[i][0]: # If its the search first term
-                                    query += " WHERE (" + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
-                                    first = False
-                                else:
-                                    query += " OR " + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
+            for searchBox in range(0, len(searches)):
+                if searches[searchBox][0] != "": # If the search box isn't empty
+                    if first: # First search query uses WHERE
+                        query += " WHERE "
+                        first = False
+                    else: # Subsequent searches uses AND
+                        query += " AND "
+                        
+                    for searchTerm in searches[searchBox]: # Iterates through all searches in each box
+                        if len(searches[searchBox]) > 1: # If there are multiple search terms
+                            if searchTerm == searches[searchBox][0]: # If its the search first term
+                                query += "(" + self.columnNames[searchBox] + " LIKE '%" + searchTerm + "%'"
                             else:
-                                query += " WHERE " + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
-                                first = False
-                        if len(searches[i]) > 1:
-                            query += ")"
-                else:
-                    if searches[i][0] != "":
-                        for searchTerm in searches[i]:
-                            if len(searches[i]) > 1:
-                                if searchTerm == searches[i][0]: # If its the search first term
-                                    query += " AND (" + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
-                                    first = False
-                                else:
-                                    query += " OR " + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
-                            else:
-                                query += " AND " + self.columnNames[i] + " LIKE '%" + searchTerm + "%'"
-                                first = False
-                        if len(searches[i]) > 1:
-                            query += ")"
+                                query += " OR " + self.columnNames[searchBox] + " LIKE '%" + searchTerm + "%'"
 
+                        else: # If there is only one search term
+                            query += self.columnNames[searchBox] + " LIKE '%" + searchTerm + "%'"
+
+                    if len(searches[searchBox]) > 1: # Add trailing bracket for multi searches
+                        query += ")"
+
+        # Orders data using specific values per table
         if self.tblName == "tblEvents":
             query += " ORDER BY Date DESC"
 
@@ -205,50 +197,52 @@ class GeneralData(tk.Frame):
         elif self.tblName == "tblUsers":
             query += " ORDER BY UserID"
 
+        print(query)
+
         db = sqlite3.connect("database.db")
         c = db.cursor()
         results = c.execute(query).fetchall()
 
-        self.dataBox.delete(0, tk.END)
+        self.dataBox.delete(0, tk.END) # Clears databox
         row = ""
-        for header in self.columnNames:
-            row += str(header).ljust(self.rowWidth, " ")
-        self.dataBox.insert(tk.END, row)
-        self.dataBox.insert(tk.END, "")
+        for header in self.columnNames: # Adds headers to table
+            row += str(header).ljust(self.columnWidth, " ")
+        self.dataBox.insert(tk.END, row) # Inserts header row
+        self.dataBox.insert(tk.END, "") # Inserts empty row for spacing
 
-        for result in results:
+        for result in results: # Iterates through each record
             rows = [""]
-            for record in result:
-                if len(str(record)) <= self.rowWidth:
-                    rows[0] += str(record).ljust(self.rowWidth, " ")
-                else:
-                    longestRecord = global_variables.longestStringInArray(result)
-                    rowsNeeded = int(ceil((longestRecord / self.rowWidth))) + 1
-                    rows = ["" for i in range(rowsNeeded)]
-                    for i in range(len(result)):
-                        if len(str(result[i])) <= self.rowWidth - 2:
-                            rows[0] += str(result[i]).ljust(self.rowWidth, " ")
-                            for j in range(1, rowsNeeded):
-                                rows[j] += self.rowWidth * " "
-                        else:
-                            toPlace = result[i].split(" ")
-                            for k in range(rowsNeeded):
+            for record in result: # Iterates though each column
+                if len(str(record)) <= self.columnWidth: # If the data fits in the space without wrapping
+                    rows[0] += str(record).ljust(self.columnWidth, " ") # Adds record with padding on right to fill space
+                else: # If the data doesn't fit in the space, line wrapping
+                    longestRecord = global_variables.longestStringInArray(result) # Finds the longest string in this result
+                    rowsNeeded = int(ceil((longestRecord / self.columnWidth))) + 1 # Calculates the MAXIMUM number of rows needed
+                    rows = ["" for i in range(rowsNeeded)] # Generates array of rows
+                    for i in range(len(result)): # Iterates through the records
+                        if len(str(result[i])) <= self.columnWidth - 2: # If the record can fit in the column
+                            rows[0] += str(result[i]).ljust(self.columnWidth, " ") # Places record into column with right padding
+                            for j in range(1, rowsNeeded): # Iterates through the row cache
+                                rows[j] += self.columnWidth * " " # Fills each line with spaces to fill gap
+                        else: # If the record cannot fit into the column
+                            toPlace = result[i].split(" ") # Splits the record into array of words
+                            for k in range(rowsNeeded): # Iterates through row cache
                                 currentLine = ""
-                                while len(toPlace) > 0:
-                                    if len(currentLine + toPlace[0]) <= self.rowWidth - 2:
-                                        currentLine += toPlace[0] + " "
-                                        del toPlace[0]
-                                    else:
-                                        rows[k] += currentLine.ljust(self.rowWidth, " ")
-                                        currentLine = ""
-                                        break
-                                if currentLine != "":
-                                    rows[k] += currentLine.ljust(self.rowWidth, " ")
-                    break
+                                while len(toPlace) > 0: # Continues until there are no more words to place or line is full
+                                    if len(currentLine + toPlace[0]) <= self.columnWidth - 2: # If next word can fit onto current line
+                                        currentLine += toPlace[0] + " " # Adds word to line
+                                        del toPlace[0] # Removes word from word arraty
+                                    else: # If the next word cannot fit into current line
+                                        rows[k] += currentLine.ljust(self.columnWidth, " ") # Adds current line to row cache
+                                        currentLine = "" # Clears line cache
+                                        break # Stops while loop as line is full
+                                if currentLine != "": # If no data could fit onto line e.g. password hash
+                                    rows[k] += currentLine.ljust(self.columnWidth, " ") # Adds blank line of correct width
+                    break # Moves onto next result
 
-            for row in rows:
-                if not global_variables.isOnlySpaces(row):
-                    self.dataBox.insert(tk.END, row)
+            for row in rows: # Iterates through each row in cacge
+                if not global_variables.isOnlySpaces(row): # Ensure row is not all blank
+                    self.dataBox.insert(tk.END, row) # Inserts row into table
 
     def refreshEventData(self):
         event_management.refresh_recent_events()
@@ -268,7 +262,7 @@ class GeneralData(tk.Frame):
         self.parent.show_events()
 
     def updateUserScreen(self):
-        UserName = self.dataBox.selection_get()[self.rowWidth:2 * self.rowWidth].strip()
+        UserName = self.dataBox.selection_get()[self.columnWidth:2 * self.columnWidth].strip()
         if not account_management.get_user_data(UserName):
             errorLabel = tk.Label(self, text="ERROR - Select a user to update", font=global_variables.text(12))
             errorLabel.grid(row=self.startRow, column=0, columnspan=2)
