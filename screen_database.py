@@ -6,6 +6,7 @@ import account_management
 import event_management
 import global_variables
 import screen_users
+import pc_identifier
 
 
 class Database(tk.Frame):
@@ -94,7 +95,12 @@ class GeneralData(tk.Frame):
         for column in columnNames:
             self.columnNames.append(column[1])
 
-        self.columnWidth = int(150 / len(self.columnNames)) # Calculate the maximum column width
+        if pc_identifier.getPC() == "BadLaptop":
+            tempWidth = 100
+        else:
+            tempWidth = 150
+
+        self.columnWidth = int(tempWidth / len(self.columnNames)) # Calculate the maximum column width
 
         tableName = tk.Label(self, text=tblName + " - Search", font=global_variables.text())
         tableName.grid(row=0, column=0, columnspan=2)
@@ -146,7 +152,7 @@ class GeneralData(tk.Frame):
             self.updateUserButton.grid(row=self.startRow, column=0, columnspan=2)
             self.startRow += 1
 
-        self.dataBox = tk.Listbox(self, width=150, height=40)
+        self.dataBox = tk.Listbox(self, width=tempWidth, height=40)
         self.dataBox.grid(row=1, column=2, rowspan=20)
         self.dataBox.config(font=("Courier", 12))
 
