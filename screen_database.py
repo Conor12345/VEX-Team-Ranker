@@ -5,8 +5,8 @@ from math import ceil
 import account_management
 import event_management
 import global_variables
-import screen_users
 import pc_identifier
+import screen_users
 
 
 class Database(tk.Frame):
@@ -164,7 +164,11 @@ class GeneralData(tk.Frame):
         for searchTerm in self.searchBoxes:
             if searchTerm.get() != "":
                 noSearches = False
-            searches.append(searchTerm.get().replace(" ", "").split(","))
+            currentSearches = [] # Sets up temporary list where items can be put
+            for searchItem in searchTerm.get().split(","): # Iterate through comma separated values
+                currentSearches.append(searchItem.strip()) # Adds item to temp list without spaces at ends
+            searches.append(currentSearches) # Adds temp list to make search array
+
 
         query = "SELECT * FROM " + self.tblName
         if not noSearches:
