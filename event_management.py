@@ -43,14 +43,14 @@ def refresh_event(EventID):  # Updates the data for the specified event
 
 
 def refresh_recent_events():
-    dateCheck = date.today() + relativedelta(months=-6)
+    dateCheck = date.today() + relativedelta(months=-6) # Gets the date six months ago
     db = sqlite3.connect("database.db")
     c = db.cursor()
-    results = c.execute("SELECT EventID FROM tblEvents where Date > (?)", (dateCheck,))
-    for event in results.fetchall():
-        if not match_management.check_event_has_matches(event[0]):
-            refresh_event(event[0])
-    import_event("season=current&country=United Kingdom")
+    results = c.execute("SELECT EventID FROM tblEvents where Date > (?)", (dateCheck,)) # Collects EventID for recent events
+    for event in results.fetchall(): # Iterates through recent events
+        if not match_management.check_event_has_matches(event[0]): # Checks if the event has any matches
+            refresh_event(event[0]) # Attempts to import matches if none exist
+    import_event("season=current&country=United Kingdom") # Import any new events from this season
 
 
 def get_event_list(country, season):
