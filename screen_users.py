@@ -59,13 +59,16 @@ class UpdateUser(NewUser):
     def __init__(self, parent, UserName):
         NewUser.__init__(self, parent)
 
-        self.originalUserData = account_management.get_user_data(UserName)
-        self.originalUserData[2] = ""
+        nameLabel = tk.Label(self, text="Update user", font=global_variables.text(16))
+        nameLabel.grid(row=0, column=0, columnspan=2)
 
-        self.entryBoxes[0][1].insert(0, self.originalUserData[1])
+        self.originalUserData = account_management.get_user_data(UserName) # Gets the select users account info
+        self.originalUserData[2] = "" # Clears the password location
+
+        self.entryBoxes[0][1].insert(0, self.originalUserData[1]) # Inserts data into the entry boxes
         self.entryBoxes[3][1].insert(0, self.originalUserData[3])
 
-        for button in self.buttons:
+        for button in self.buttons: # Removes buttons from new user init
             button.grid_forget()
 
         self.buttons = [tk.Button(self, text="Update User", font=global_variables.text(16), command=self.updateUserCommand)]
@@ -74,8 +77,8 @@ class UpdateUser(NewUser):
         self.buttons.append(tk.Button(self, text="Delete User", font=global_variables.text(16), command=self.deleteUserCommand))
         self.buttons[1].grid(row=7, column=0, columnspan=2)
 
-        if self.originalUserData[4] == 1:
-            self.entryBoxes[4][1].select()
+        if self.originalUserData[4] == 1: # If the user began as an admin
+            self.entryBoxes[4][1].select() # Put tick in entry box
 
     def updateUserCommand(self):
         data = [None for i in range(3)]
