@@ -48,6 +48,10 @@ class NewUser(tk.Frame):
             errorLabel = tk.Label(self, text="ERROR - Passwords must be atleast 8 characters", font=global_variables.text(12))
             errorLabel.grid(row=7, column=0, columnspan=2)
 
+        elif account_management.get_user_data(self.entryBoxes[0][1].get()):
+            errorLabel = tk.Label(self, text="ERROR - Username already exist", font=global_variables.text(12))
+            errorLabel.grid(row=7, column=0, columnspan=2)
+
         elif account_management.create_user(self.entryBoxes[0][1].get(), self.entryBoxes[1][1].get(), self.entryBoxes[3][1].get(), self.AdminVar.get()):
             self.parent.show_users()
 
@@ -83,10 +87,15 @@ class UpdateUser(NewUser):
     def updateUserCommand(self):
         data = [None for i in range(3)]
 
-        if self.entryBoxes[0][1].get() != self.originalUserData[1]:
-            data[0] = self.entryBoxes[0][1].get()
+        if self.entryBoxes[0][1].get() != self.originalUserData[1]: # If the username has changed
+            if account_management.get_user_data(self.entryBoxes[0][1].get()): # If the user already exists
+                errorLabel = tk.Label(self, text="ERROR - Username already exist", font=global_variables.text(12))
+                errorLabel.grid(row=8, column=0, columnspan=2)
+                return False
+            else:
+                data[0] = self.entryBoxes[0][1].get()
 
-        if self.entryBoxes[3][1].get() != self.originalUserData[3]:
+        if self.entryBoxes[3][1].get() != self.originalUserData[3]: # If the team number has changed
             if not team_management.check_team_presence(self.entryBoxes[3][1].get()):
                 if not team_management.import_team(self.entryBoxes[3][1].get()):
                     errorLabel = tk.Label(self, text="ERROR - Team does not exist", font=global_variables.text(12))
@@ -94,25 +103,25 @@ class UpdateUser(NewUser):
                     return False
             data[1] = self.entryBoxes[3][1].get()
 
-        if self.AdminVar.get() != self.originalUserData[4]:
+        if self.AdminVar.get() != self.originalUserData[4]: # If the admin state has changed
             data[2] = self.AdminVar.get()
 
-        if data != [None for i in range(3)]:
+        if data != [None for i in range(3)]: # If one or more of the above data fields have changed
             account_management.update_user_data(self.originalUserData[1], data[0], data[1], data[2])
 
-        if self.entryBoxes[1][1].get() != "":
-            if self.entryBoxes[1][1].get() != self.entryBoxes[2][1].get():
+        if self.entryBoxes[1][1].get() != "": # If a new password has been entered
+            if self.entryBoxes[1][1].get() != self.entryBoxes[2][1].get(): # If the password do not match
                 errorLabel = tk.Label(self, text="ERROR - Passwords do not match", font=global_variables.text(12))
                 errorLabel.grid(row=8, column=0, columnspan=2)
                 return False
-            elif len(self.entryBoxes[1][1].get()) < 8:
+            elif len(self.entryBoxes[1][1].get()) < 8: # If the passwords are too short
                 errorLabel = tk.Label(self, text="ERROR - Passwords must be atleast 8 characters", font=global_variables.text(12))
                 errorLabel.grid(row=8, column=0, columnspan=2)
                 return False
-            else:
-                if data[0] is not None:
+            else: # Updates the password
+                if data[0] is not None: # If the username has been changed already
                     userName = data[0]
-                else:
+                else: # The username has not changed
                     userName = self.originalUserData[1]
                 account_management.update_user_password(userName, self.entryBoxes[1][1].get())
 
