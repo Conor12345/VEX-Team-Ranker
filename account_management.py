@@ -76,10 +76,6 @@ def update_user_data(CurrentUserName, NewUserName=None, NewTeamNum=None, NewAdmi
         db.commit()
 
     if NewTeamNum is not None:
-        if team_management.check_team_presence(NewTeamNum):
-            team_management.refresh_team(NewTeamNum)
-        else:
-            team_management.import_team(NewTeamNum)
         db = sqlite3.connect("database.db")
         c = db.cursor()
         c.execute('UPDATE tblUsers set TeamNum=? where UserName=?', (NewTeamNum, CurrentUserName))
