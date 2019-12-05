@@ -207,8 +207,6 @@ class GeneralData(tk.Frame):
         elif self.tblName == "tblUsers":
             query += " ORDER BY UserID"
 
-        print(query)
-
         db = sqlite3.connect("database.db")
         c = db.cursor()
         results = c.execute(query).fetchall()
@@ -218,7 +216,7 @@ class GeneralData(tk.Frame):
         for header in self.columnNames: # Adds headers to table
             row += str(header).ljust(self.columnWidth, " ")
         self.dataBox.insert(tk.END, row) # Inserts header row
-        self.dataBox.insert(tk.END, "") # Inserts empty row for spacing
+        self.dataBox.insert(tk.END, " ") # Inserts empty row for spacing
 
         for result in results: # Iterates through each record
             rows = [""]
