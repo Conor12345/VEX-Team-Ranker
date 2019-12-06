@@ -69,12 +69,6 @@ def update_user_password(UserName, NewPassword):
     db.commit()
 
 def update_user_data(CurrentUserName, NewUserName=None, NewTeamNum=None, NewAdmin=None):
-    if NewUserName is not None:
-        db = sqlite3.connect("database.db")
-        c = db.cursor()
-        c.execute('UPDATE tblUsers set UserName=? where UserName=?', (NewUserName, CurrentUserName))
-        db.commit()
-
     if NewTeamNum is not None:
         db = sqlite3.connect("database.db")
         c = db.cursor()
@@ -85,6 +79,12 @@ def update_user_data(CurrentUserName, NewUserName=None, NewTeamNum=None, NewAdmi
         db = sqlite3.connect("database.db")
         c = db.cursor()
         c.execute('UPDATE tblUsers set Admin=? where UserName=?', (NewAdmin, CurrentUserName))
+        db.commit()
+
+    if NewUserName is not None:
+        db = sqlite3.connect("database.db")
+        c = db.cursor()
+        c.execute('UPDATE tblUsers set UserName=? where UserName=?', (NewUserName, CurrentUserName))
         db.commit()
 
 def delete_user(UserName):
