@@ -97,7 +97,7 @@ class UpdateUser(NewUser):
 
         if self.entryBoxes[3][1].get() != self.originalUserData[3]: # If the team number has changed
             if not team_management.check_team_presence(self.entryBoxes[3][1].get()):
-                if not team_management.import_team(self.entryBoxes[3][1].get()):
+                if team_management.import_team(self.entryBoxes[3][1].get()) == False:
                     errorLabel = tk.Label(self, text="ERROR - Team does not exist", font=global_variables.text(12))
                     errorLabel.grid(row=8, column=0, columnspan=2)
                     return False
