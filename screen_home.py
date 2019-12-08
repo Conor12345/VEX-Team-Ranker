@@ -175,3 +175,6 @@ class Home(tk.Frame):
     def removeAllTeams(self):
         self.controller.selectedTeams = []
         self.refreshTeamList()
+
+    def bindSetup(self):
+        pass

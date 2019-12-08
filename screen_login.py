@@ -28,6 +28,9 @@ class Login(tk.Frame):
 
         self.userBox.focus()
 
+    def bindSetup(self):
+        self.controller.bind("<Return>", self.submitLogin)
+
     def submitLogin(self, blank=None):
         if self.userBox.get() + self.passBox.get() == "": # Automatic login for testing purposes
             self.userBox.insert(0, "Admin")

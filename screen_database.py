@@ -81,6 +81,9 @@ class Database(tk.Frame):
         self.currentPage = screen_users.UpdateUser(self, UserName)
         self.currentPage.grid(row=3, column=0, columnspan=5)
 
+    def bindSetup(self):
+        self.controller.bind("<Return>", self.currentPage.updateData)
+
 class GeneralData(tk.Frame):
     def __init__(self, parent, tblName):
         tk.Frame.__init__(self, parent)
@@ -173,7 +176,7 @@ class GeneralData(tk.Frame):
 
         self.updateData()
 
-    def updateData(self):
+    def updateData(self, test=None):
         noSearches = True
         searches = []
         for searchTerm in self.searchBoxes:

@@ -39,6 +39,7 @@ class Main(tk.Tk):
 
     def show_frame(self, container):
         self.frames[container].tkraise()
+        self.frames[container].bindSetup()
 
     def login_success(self, UserName):
         self.currentUser = UserName
