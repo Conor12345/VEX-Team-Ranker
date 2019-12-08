@@ -136,7 +136,7 @@ class GeneralData(tk.Frame):
         self.startRow += 1
 
         if self.parent.switch is not None:
-            self.searchBoxes[0].insert(0, self.parent.switch)
+            self.searchBoxes[self.parent.switch[1]].insert(0, self.parent.switch[0])
             self.parent.switch = None
 
         if self.tblName == "tblEvents":
@@ -144,7 +144,7 @@ class GeneralData(tk.Frame):
             self.refreshButton.grid(row=self.startRow, column=0, columnspan=2)
             self.startRow += 1
 
-            self.showMatches = tk.Button(self, text="Show corresponding matches", font=global_variables.text(14), command=self.switchToMatchView)
+            self.showMatches = tk.Button(self, text="Show corresponding matches", font=global_variables.text(14), command=self.switchToMatchViewEvent)
             self.showMatches.grid(row=self.startRow, column=0, columnspan=2)
             self.startRow += 1
 
@@ -154,7 +154,9 @@ class GeneralData(tk.Frame):
             self.startRow += 1
 
         elif self.tblName == "tblTeams":
-            pass
+            self.showMatches = tk.Button(self, text="Show corresponding matches", font=global_variables.text(14), command=self.switchToMatchViewTeam)
+            self.showMatches.grid(row=self.startRow, column=0, columnspan=2)
+            self.startRow += 1
 
         elif self.tblName == "tblUsers":
             self.newUserButton = tk.Button(self, text="New user", font=global_variables.text(14), command=self.parent.show_new_users)
@@ -274,18 +276,22 @@ class GeneralData(tk.Frame):
         event_management.refresh_recent_events()
         self.updateData()
 
-    def switchToMatchView(self):
+    def switchToMatchViewEvent(self):
         selectedEventID = self.dataBox.selection_get()[0:14]
         if global_variables.isOnlySpaces([selectedEventID]):
             errorLabel = tk.Label(self, text="ERROR - Select record with an EventID", font=global_variables.text(12))
             errorLabel.grid(row=self.startRow, column=0, columnspan=2)
         else:
-            self.parent.switch = selectedEventID
+            self.parent.switch = [selectedEventID, 0]
         self.parent.show_matches()
 
     def switchToEventView(self):
-        self.parent.switch = self.dataBox.selection_get()[0:14]
+        self.parent.switch = [self.dataBox.selection_get()[0:14], 0]
         self.parent.show_events()
+
+    def switchToMatchViewTeam(self):
+        self.parent.switch = [self.dataBox.selection_get()[0:20].strip(), 5]
+        self.parent.show_matches()
 
     def updateUserScreen(self):
         UserName = self.dataBox.selection_get()[self.columnWidth:2 * self.columnWidth].strip()
