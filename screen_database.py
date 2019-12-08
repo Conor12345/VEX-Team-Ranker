@@ -110,21 +110,34 @@ class GeneralData(tk.Frame):
 
         self.startRow = 2
         self.searchBoxes = []
+        self.labels = []
         for searchItem in range(len(self.columnNames)):
-            label = tk.Label(self, text=self.columnNames[searchItem], font=global_variables.text(14))
-            label.grid(row=searchItem + self.startRow, column=0)
+            if self.columnNames[searchItem] not in ["RedTeam1","RedTeam2", "BlueTeam1", "BlueTeam2"]:
+                self.labels.append(tk.Label(self, text=self.columnNames[searchItem], font=global_variables.text(14)))
+                self.labels[self.startRow - 2].grid(row=self.startRow, column=0)
+
+                self.searchBoxes.append(tk.Entry(self, font=global_variables.text(14)))
+                self.searchBoxes[self.startRow - 2].grid(row=self.startRow, column=1)
+
+                self.startRow += 1
+
+        if self.tblName == "tblMatches":
+            self.labels.append(tk.Label(self, text="TeamNumber", font=global_variables.text(14)))
+            self.labels[self.startRow - 2].grid(row=self.startRow, column=0)
 
             self.searchBoxes.append(tk.Entry(self, font=global_variables.text(14)))
-            self.searchBoxes[searchItem].grid(row=searchItem + self.startRow, column=1)
+            self.searchBoxes[self.startRow - 2].grid(row=self.startRow, column=1)
+
+            self.startRow += 1
 
         self.refreshButton = tk.Button(self, text="Search", font=global_variables.text(14), command=self.updateData)
-        self.refreshButton.grid(row=len(self.columnNames) + 2, column=0, columnspan=2)
+        self.refreshButton.grid(row=self.startRow, column=0, columnspan=2)
+
+        self.startRow += 1
 
         if self.parent.switch is not None:
             self.searchBoxes[0].insert(0, self.parent.switch)
             self.parent.switch = None
-
-        self.startRow = len(self.columnNames) + 3  # Increment after each use
 
         if self.tblName == "tblEvents":
             self.refreshButton = tk.Button(self, text="Update recent events", font=global_variables.text(14), command=self.refreshEventData)
@@ -180,19 +193,22 @@ class GeneralData(tk.Frame):
                         first = False
                     else: # Subsequent searches uses AND
                         query += " AND "
-                        
+
+                    subquery = "" # The query for this box goes in here
                     for searchTerm in searches[searchBox]: # Iterates through all searches in each box
-                        if len(searches[searchBox]) > 1: # If there are multiple search terms
-                            if searchTerm == searches[searchBox][0]: # If its the search first term
-                                query += "(" + self.columnNames[searchBox] + " LIKE '%" + searchTerm + "%'"
-                            else:
-                                query += " OR " + self.columnNames[searchBox] + " LIKE '%" + searchTerm + "%'"
+                        if searchTerm != searches[searchBox][0]:  # If its not the first term
+                            subquery += " OR "
+                        if self.labels[searchBox]["text"] != "TeamNumber":  # If its not the special case teams
+                            subquery += self.labels[searchBox]["text"] + " LIKE '%" + searchTerm + "%'"
+                        else:  # It is the special case for teams on match screen
+                            subquery += "("
+                            for columnName in ["RedTeam1", "RedTeam2", "BlueTeam1", "BlueTeam2"]:  # Iterate through team column names
+                                if columnName != "RedTeam1":  # If its not the first column
+                                    subquery += " OR "
+                                subquery += columnName + " LIKE '%" + searchTerm + "%'"
+                            subquery += ")"
 
-                        else: # If there is only one search term
-                            query += self.columnNames[searchBox] + " LIKE '%" + searchTerm + "%'"
-
-                    if len(searches[searchBox]) > 1: # Add trailing bracket for multi searches
-                        query += ")"
+                    query = query + "(" + subquery + ")" # Puts subquery into main query with brackets
 
         # Orders data using specific values per table
         if self.tblName == "tblEvents":
@@ -206,6 +222,8 @@ class GeneralData(tk.Frame):
 
         elif self.tblName == "tblUsers":
             query += " ORDER BY UserID"
+
+        print(query)
 
         db = sqlite3.connect("database.db")
         c = db.cursor()
