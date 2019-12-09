@@ -51,22 +51,26 @@ class Database(tk.Frame):
             self.currentPage.grid_forget()
         self.currentPage = GeneralData(self, "tblEvents")
         self.currentPage.grid(row=3, column=0, columnspan=5)
+        self.bindSetup()
 
     def show_matches(self):
         self.currentPage.grid_forget()
         self.currentPage = GeneralData(self, "tblMatches")
         self.currentPage.grid(row=3, column=0, columnspan=5)
+        self.bindSetup()
 
     def show_teams(self):
         self.currentPage.grid_forget()
         self.currentPage = GeneralData(self, "tblTeams")
         self.currentPage.grid(row=3, column=0, columnspan=5)
+        self.bindSetup()
 
     def show_users(self):
         if self.controller.isAdmin:
             self.currentPage.grid_forget()
             self.currentPage = GeneralData(self, "tblUsers")
             self.currentPage.grid(row=3, column=0, columnspan=5)
+            self.bindSetup()
         else:
             errorLabel = tk.Label(self.smallMenu, text="ERROR - Insufficient permissions", font=global_variables.text(16))
             errorLabel.grid(row=1, column=4)
