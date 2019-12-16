@@ -1,9 +1,9 @@
 import sqlite3
+from importlib import reload
 
 import api_query
-import match_management
 import event_management
-from importlib import reload
+import match_management
 
 reload(match_management)
 
@@ -41,10 +41,13 @@ def refresh_team(TeamNum):
 def get_team_list(EventName):
     eventID = event_management.get_eventID(EventName)
     matchData = match_management.import_match(eventID, True)
-    teams = []
-    for match in matchData:
-        if match["round"] == 1:
-            for team in ["red1", "red2", "red3", "blue1", "blue2", "blue3"]:
-                if match[team] != "" and match[team] not in teams:
-                    teams.append(match[team])
-    return sorted(teams)
+    if matchData != False:
+        teams = []
+        for match in matchData:
+            if match["round"] == 1:
+                for team in ["red1", "red2", "red3", "blue1", "blue2", "blue3"]:
+                    if match[team] != "" and match[team] not in teams:
+                        teams.append(match[team])
+        return sorted(teams)
+    else:
+        return []

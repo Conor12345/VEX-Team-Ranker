@@ -122,7 +122,7 @@ class Home(tk.Frame):
         self.finalSeasonMenu.grid(row=8, column=1)
         self.finalSeasonMenu.config(font=global_variables.text(12))
 
-        self.beginButton = tk.Button(self.dataGrid, text="Begin analysis", font=global_variables.text())
+        self.beginButton = tk.Button(self.dataGrid, text="Begin analysis", font=global_variables.text(), command=self.runAlgorithm)
         self.beginButton.grid(row=9, column=0, columnspan=3)
 
 
@@ -175,6 +175,16 @@ class Home(tk.Frame):
     def removeAllTeams(self):
         self.controller.selectedTeams = []
         self.refreshTeamList()
+
+    def runAlgorithm(self):
+        if len(self.controller.selectedTeams) == 0:
+            print("ERROR - No teams selected") # TODO proper error msg
+        elif self.finalSeasonVar.get() == "Choose season":
+            print("ERROR - No season selected")
+        else:
+            self.controller.selectedSeason = self.finalSeasonVar.get()
+            self.controller.selectedCountry = self.finalCountryVar.get()
+            self.controller.show_algorithm()
 
     def bindSetup(self):
         pass

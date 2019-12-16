@@ -2,6 +2,7 @@ import tkinter as tk
 
 import account_management
 import pc_identifier
+from screen_algorithm import Algorithm
 from screen_database import Database
 from screen_home import Home
 from screen_login import Login
@@ -28,7 +29,7 @@ class Main(tk.Tk):
 
         self.frames = {}
 
-        for F in [Login, Home, Database]:
+        for F in [Login, Home, Database, Algorithm]:
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -51,6 +52,9 @@ class Main(tk.Tk):
 
     def show_home(self):
         self.show_frame(Home)
+
+    def show_algorithm(self):
+        self.show_frame(Algorithm)
 
 app = Main()
 app.state(pc_identifier.getType())

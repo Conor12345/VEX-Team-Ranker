@@ -53,10 +53,14 @@ def refresh_recent_events():
     import_event("season=current&country=United Kingdom") # Import any new events from this season
 
 
-def get_event_list(country, season):
+def get_event_list(country, season, sku=False):
+    if sku:
+        column = "EventID"
+    else:
+        column = "EventName"
     db = sqlite3.connect("database.db")
     c = db.cursor()
-    results = c.execute("SELECT EventName FROM tblEvents WHERE Country=(?) and Season=(?)", (country, season)).fetchall()
+    results = c.execute("SELECT " + column + " FROM tblEvents WHERE Country=(?) and Season=(?)", (country, season)).fetchall()
     data = []
     for event in results:
         data.append(event[0])
