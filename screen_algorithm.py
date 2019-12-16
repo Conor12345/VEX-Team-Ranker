@@ -20,16 +20,24 @@ class Algorithm(tk.Frame):
         self.currentLabel = tk.Label(self, text="Current task : Fetching complete team list", font=global_variables.text(20))
         self.currentLabel.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
+        self.dataSetup()
+
+    def dataSetup(self):
         self.teamDict = {}
         self.eventNames = event_management.get_event_list(self.country, self.season)
         for eventName in self.eventNames:
             for teamNum in team_management.get_team_list(eventName):
                 if teamNum not in self.teamDict:
-                    self.teamDict[teamNum] = 50 # TODO make this use existing skill values + pick start value
+                    self.teamDict[teamNum] = team_management.get_team_skill(teamNum)
 
         db = sqlite3.connect("database.db")
         c = db.cursor()
         results = c.execute("SELECT MatchLevel, RedTeam1, RedTeam2, BlueTeam1, BlueTeam2, RedScore, BlueScore, Date "
                             "FROM tblMatches JOIN tblEvents ON tblMatches.EventID = tblEvents.EventID "
-                            "WHERE Country='United Kingdom' AND Season='Turning Point'").fetchall()
-        print(results)
+                            "WHERE Country=(?) AND Season=(?)", (self.country, self.season)).fetchall()
+
+        # MatchLevel 0, RedTeam1 1, RedTeam2 2, BlueTeam1 3, BlueTeam2 4, RedScore 5, BlueScore 6, Date 7
+        # (2, '10173S', '10173X', '1408G', '33434A', 12, 16, '2019-03-01')
+        for match in results:
+            print(match)
+            break
