@@ -51,3 +51,10 @@ def get_team_list(EventName):
         return sorted(teams)
     else:
         return []
+
+def get_team_skill(TeamNum):
+    if not check_team_presence(TeamNum):
+        return False
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    return c.execute('SELECT * FROM tblTeams where TeamNum = (?)', (TeamNum,)).fetchall()[0][4]
