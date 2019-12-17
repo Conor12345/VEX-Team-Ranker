@@ -48,7 +48,15 @@ def get_team_list(EventName):
                 for team in ["red1", "red2", "red3", "blue1", "blue2", "blue3"]:
                     if match[team] != "" and match[team] not in teams:
                         teams.append(match[team])
-        return sorted(teams)
+        if len(teams) != 0:
+            return sorted(teams)
+        else:
+            teams = []
+            for match in matchData:
+                for team in ["red1", "red2", "red3", "blue1", "blue2", "blue3"]:
+                    if match[team] != "" and match[team] not in teams:
+                        teams.append(match[team])
+            return sorted(teams)
     else:
         return []
 
