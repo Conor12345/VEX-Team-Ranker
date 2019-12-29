@@ -39,26 +39,15 @@ def refresh_team(TeamNum):
 
 
 def get_team_list(EventName):
-    eventID = event_management.get_eventID(EventName)
-    matchData = match_management.import_match(eventID, True)
-    if matchData != False:
-        teams = []
-        for match in matchData:
-            if match["round"] == 1:
-                for team in ["red1", "red2", "red3", "blue1", "blue2", "blue3"]:
-                    if match[team] != "" and match[team] not in teams:
-                        teams.append(match[team])
-        if len(teams) != 0:
-            return sorted(teams)
-        else:
-            teams = []
-            for match in matchData:
-                for team in ["red1", "red2", "red3", "blue1", "blue2", "blue3"]:
-                    if match[team] != "" and match[team] not in teams:
-                        teams.append(match[team])
-            return sorted(teams)
-    else:
-        return []
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    results = c.execute("SELECT RedTeam1, RedTeam2, BlueTeam1, BlueTeam2 FROM tblMatches "
+                        "JOIN tblEvents ON tblMatches.EventID = tblEvents.EventID WHERE EventName=(?)", (EventName,)).fetchall()
+    teamList = []
+    for match in results:
+        teamList += match
+
+    return sorted(list(set(teamList)))
 
 def get_team_skill(TeamNum):
     if not check_team_presence(TeamNum):
