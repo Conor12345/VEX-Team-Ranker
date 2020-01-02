@@ -1,10 +1,11 @@
 import json
 import sqlite3
-import tkinter as tk
 import time
+import tkinter as tk
 
 import matplotlib.pyplot as plt
 import requests
+import xlwt
 
 import event_management
 import global_variables
@@ -56,7 +57,7 @@ class Algorithm(tk.Frame):
 
         # MatchLevel 0, RedTeam1 1, RedTeam2 2, BlueTeam1 3, BlueTeam2 4, RedScore 5, BlueScore 6, Season 7
         # (2, '10173S', '10173X', '1408G', '33434A', 12, 16, '2019-03-01')
-        for i in range(0, 1001):
+        for i in range(0, 11):
             for match in results:
                 teams = match[1:5]
                 roundNum = match[0]
@@ -98,17 +99,24 @@ class Algorithm(tk.Frame):
                 self.teamDict[teams[2]] += scoreChanges[1]
                 self.teamDict[teams[3]] += scoreChanges[1]
 
-            if i == 0 or i == 10 or i == 100 or i == 1000:
-                calculatedSkill = []
-                for teamNum in self.teamDict:
-                    calculatedSkill.append(self.teamDict[teamNum])
+        calculatedSkill = []
+        for teamNum in self.teamDict:
+            calculatedSkill.append(self.teamDict[teamNum])
 
-                plt.plot(VEXDBSkills, calculatedSkill, "ro")
-                plt.xlabel("VEX DB Skill rating")
-                plt.ylabel("Calculated skill values")
+        plt.plot(VEXDBSkills, calculatedSkill, "ro")
+        plt.xlabel("VEX DB Skill rating")
+        plt.ylabel("Calculated skill values")
 
-                plt.show()
+        plt.show()
 
-                print("Runnning ranking iteration no " + str(i) + " @ " + str(round(time.time() - startTime)))
+        book = xlwt.Workbook()  # initiate sheet
+        sheet = book.add_sheet('Sheet 1')  # create a blank sheet
 
-        print(self.teamDict)
+        sheet.write(1, 1, "VexDBSkill")
+        sheet.write(1, 2, "Calculated Skill")
+
+        for i in range(len(calculatedSkill)):
+            sheet.write(i + 2, 1, VEXDBSkills[i])
+            sheet.write(i + 2, 2, calculatedSkill[i])
+
+        book.save('Sample.xls')  # save the sheet to a file
