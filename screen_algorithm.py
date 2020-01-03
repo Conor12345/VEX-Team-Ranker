@@ -1,10 +1,8 @@
-import json
 import sqlite3
 import time
 import tkinter as tk
 
 import matplotlib.pyplot as plt
-import requests
 import xlwt
 
 import event_management
@@ -16,7 +14,6 @@ class Algorithm(tk.Frame):
     def __init__(self, parent, controller):
         self.controller = controller
         tk.Frame.__init__(self, parent)
-
 
     def bindSetup(self):
         self.season = self.controller.selectedSeason
@@ -48,10 +45,13 @@ class Algorithm(tk.Frame):
         print("Fetching VEX DB skils @ " + str(round(time.time() - startTime)))
 
         VEXDBSkills = []
+        i = 1
         for team in self.teamDict:
-            response = requests.get("https://api.vexdb.io/v1/" + "get_season_rankings" + "?team=" + team)
-            todos = json.loads(response.text)  # load results in JSON, python friendly format
-            VEXDBSkills.append(todos["result"][0]["vrating"])
+            # response = requests.get("https://api.vexdb.io/v1/" + "get_season_rankings" + "?team=" + team)
+            # todos = json.loads(response.text)  # load results in JSON, python friendly format
+            # VEXDBSkills.append(todos["result"][0]["vrating"])
+            VEXDBSkills.append(i)
+            i += 1
 
         print("Running main loop @ " + str(round(time.time() - startTime)))
 
@@ -89,7 +89,7 @@ class Algorithm(tk.Frame):
 
                 if expectedWinner != actualWinner and actualWinner != "Draw" and expectedWinner != "Draw":
                     probabilities[0] = 1 / probabilities[0]
-                    probabilities[1] = 1/ probabilities[1]
+                    probabilities[1] = 1 / probabilities[1]
 
                 scoreChanges[0] = scoreChanges[0] * probabilities[0] * roundNum
                 scoreChanges[1] = scoreChanges[1] * probabilities[1] * roundNum
@@ -105,6 +105,11 @@ class Algorithm(tk.Frame):
 
         plt.plot(VEXDBSkills, calculatedSkill, "ro")
         plt.xlabel("VEX DB Skill rating")
+        plt.ylabel("Calculated skill values")
+
+        plt.show()
+
+        plt.plot(VEXDBSkills, sorted(calculatedSkill), "ro")
         plt.ylabel("Calculated skill values")
 
         plt.show()
