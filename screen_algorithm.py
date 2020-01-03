@@ -16,16 +16,15 @@ class Algorithm(tk.Frame):
         tk.Frame.__init__(self, parent)
 
     def bindSetup(self):
-        self.season = self.controller.selectedSeason
-        self.country = self.controller.selectedCountry
-        self.teamsToOutput = self.controller.selectedTeams
-
-        startTime = time.time()
-
         self.currentLabel = tk.Label(self, text="Current task : Fetching complete team list", font=global_variables.text(20))
         self.currentLabel.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
-        print("Setting up dictionary @ " + str(round(time.time() - startTime)))
+        self.controller.after(500, self.dataSetup)
+
+    def dataSetup(self):
+        self.season = self.controller.selectedSeason
+        self.country = self.controller.selectedCountry
+        self.teamsToOutput = self.controller.selectedTeams
 
         self.teamDict = {}
         self.eventNames = event_management.get_event_list(self.country, self.season)
@@ -34,31 +33,31 @@ class Algorithm(tk.Frame):
                 if teamNum not in self.teamDict:
                     self.teamDict[teamNum] = team_management.get_team_skill(teamNum)
 
-        print("Fetching matches @ " + str(round(time.time() - startTime)))
-
         db = sqlite3.connect("database.db")
         c = db.cursor()
-        results = c.execute("SELECT MatchLevel, RedTeam1, RedTeam2, BlueTeam1, BlueTeam2, RedScore, BlueScore, Season "
+        self.results = c.execute("SELECT MatchLevel, RedTeam1, RedTeam2, BlueTeam1, BlueTeam2, RedScore, BlueScore, Season "
                             "FROM tblMatches JOIN tblEvents ON tblMatches.EventID = tblEvents.EventID "
                             "WHERE Country=(?) AND Season=(?)", (self.country, self.season)).fetchall()
 
-        print("Fetching VEX DB skils @ " + str(round(time.time() - startTime)))
-
-        VEXDBSkills = []
+        self.VEXDBSkills = []
         i = 1
         for team in self.teamDict:
             # response = requests.get("https://api.vexdb.io/v1/" + "get_season_rankings" + "?team=" + team)
             # todos = json.loads(response.text)  # load results in JSON, python friendly format
             # VEXDBSkills.append(todos["result"][0]["vrating"])
-            VEXDBSkills.append(i)
+            self.VEXDBSkills.append(i)
             i += 1
 
-        print("Running main loop @ " + str(round(time.time() - startTime)))
+        self.currentLabel = tk.Label(self, text="              Current task : Ranking teams             ", font=global_variables.text(20))
+        self.currentLabel.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
+        self.controller.after(500, self.mainAlgorithm)
+
+    def mainAlgorithm(self):
         # MatchLevel 0, RedTeam1 1, RedTeam2 2, BlueTeam1 3, BlueTeam2 4, RedScore 5, BlueScore 6, Season 7
         # (2, '10173S', '10173X', '1408G', '33434A', 12, 16, '2019-03-01')
         for i in range(0, 11):
-            for match in results:
+            for match in self.results:
                 teams = match[1:5]
                 roundNum = match[0]
                 score = match[5:7]
@@ -103,13 +102,7 @@ class Algorithm(tk.Frame):
         for teamNum in self.teamDict:
             calculatedSkill.append(self.teamDict[teamNum])
 
-        plt.plot(VEXDBSkills, calculatedSkill, "ro")
-        plt.xlabel("VEX DB Skill rating")
-        plt.ylabel("Calculated skill values")
-
-        plt.show()
-
-        plt.plot(VEXDBSkills, sorted(calculatedSkill), "ro")
+        plt.plot(self.VEXDBSkills, sorted(calculatedSkill), "ro")
         plt.ylabel("Calculated skill values")
 
         plt.show()
@@ -121,7 +114,7 @@ class Algorithm(tk.Frame):
         sheet.write(1, 2, "Calculated Skill")
 
         for i in range(len(calculatedSkill)):
-            sheet.write(i + 2, 1, VEXDBSkills[i])
+            sheet.write(i + 2, 1, self.VEXDBSkills[i])
             sheet.write(i + 2, 2, calculatedSkill[i])
 
         book.save('Sample.xls')  # save the sheet to a file
