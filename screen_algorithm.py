@@ -1,5 +1,4 @@
 import sqlite3
-import time
 import tkinter as tk
 
 import matplotlib.pyplot as plt
@@ -31,22 +30,13 @@ class Algorithm(tk.Frame):
         for eventName in self.eventNames:
             for teamNum in team_management.get_team_list(eventName):
                 if teamNum not in self.teamDict:
-                    self.teamDict[teamNum] = team_management.get_team_skill(teamNum)
+                    self.teamDict[teamNum] = [team_management.get_team_skill(teamNum), 0]
 
         db = sqlite3.connect("database.db")
         c = db.cursor()
         self.results = c.execute("SELECT MatchLevel, RedTeam1, RedTeam2, BlueTeam1, BlueTeam2, RedScore, BlueScore, Season "
                             "FROM tblMatches JOIN tblEvents ON tblMatches.EventID = tblEvents.EventID "
                             "WHERE Country=(?) AND Season=(?)", (self.country, self.season)).fetchall()
-
-        self.VEXDBSkills = []
-        i = 1
-        for team in self.teamDict:
-            # response = requests.get("https://api.vexdb.io/v1/" + "get_season_rankings" + "?team=" + team)
-            # todos = json.loads(response.text)  # load results in JSON, python friendly format
-            # VEXDBSkills.append(todos["result"][0]["vrating"])
-            self.VEXDBSkills.append(i)
-            i += 1
 
         self.currentLabel = tk.Label(self, text="              Current task : Ranking teams             ", font=global_variables.text(20))
         self.currentLabel.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
@@ -65,7 +55,7 @@ class Algorithm(tk.Frame):
 
                 skillRating = []
                 for team in teams:
-                    skillRating.append(self.teamDict[team])
+                    skillRating.append(self.teamDict[team][0])
 
                 probabilities = [(skillRating[0] + skillRating[1]) / sum(skillRating), (skillRating[2] + skillRating[3]) / sum(skillRating)]
 
@@ -93,16 +83,25 @@ class Algorithm(tk.Frame):
                 scoreChanges[0] = scoreChanges[0] * probabilities[0] * roundNum
                 scoreChanges[1] = scoreChanges[1] * probabilities[1] * roundNum
 
-                self.teamDict[teams[0]] += scoreChanges[0]
-                self.teamDict[teams[1]] += scoreChanges[0]
-                self.teamDict[teams[2]] += scoreChanges[1]
-                self.teamDict[teams[3]] += scoreChanges[1]
+                self.teamDict[teams[0]][0] += scoreChanges[0]
+                self.teamDict[teams[1]][0] += scoreChanges[0]
+                self.teamDict[teams[2]][0] += scoreChanges[1]
+                self.teamDict[teams[3]][0] += scoreChanges[1]
+
+                self.teamDict[teams[0]][1] += abs(scoreChanges[0])
+                self.teamDict[teams[1]][1] += abs(scoreChanges[0])
+                self.teamDict[teams[2]][1] += abs(scoreChanges[1])
+                self.teamDict[teams[3]][1] += abs(scoreChanges[1])
 
         calculatedSkill = []
         for teamNum in self.teamDict:
-            calculatedSkill.append(self.teamDict[teamNum])
+            calculatedSkill.append(self.teamDict[teamNum][0])
 
-        plt.plot(self.VEXDBSkills, sorted(calculatedSkill), "ro")
+        variance = []
+        for teamNum in self.teamDict:
+            variance.append(self.teamDict[teamNum][1])
+
+        plt.plot([x for x in range(len(self.teamDict))], sorted(calculatedSkill), "ro")
         plt.ylabel("Calculated skill values")
 
         plt.show()
@@ -110,11 +109,19 @@ class Algorithm(tk.Frame):
         book = xlwt.Workbook()  # initiate sheet
         sheet = book.add_sheet('Sheet 1')  # create a blank sheet
 
-        sheet.write(1, 1, "VexDBSkill")
+        sheet.write(1, 1, "Team Number")
         sheet.write(1, 2, "Calculated Skill")
+        sheet.write(1, 3, "Variance")
 
         for i in range(len(calculatedSkill)):
-            sheet.write(i + 2, 1, self.VEXDBSkills[i])
             sheet.write(i + 2, 2, calculatedSkill[i])
+            sheet.write(i + 2, 3, variance[i])
+
+        row = 2
+        for team in self.teamDict:
+            sheet.write(row, 1, team)
+            row += 1
 
         book.save('Sample.xls')  # save the sheet to a file
+
+        self.controller.show_home()
