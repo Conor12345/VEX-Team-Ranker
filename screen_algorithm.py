@@ -1,5 +1,4 @@
 import sqlite3
-import time
 import tkinter as tk
 
 import matplotlib.pyplot as plt
@@ -23,8 +22,6 @@ class Algorithm(tk.Frame):
         self.currentLabel = tk.Label(self, text="Current task : Fetching complete team list", font=global_variables.text(20))
         self.currentLabel.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
-        print(time.time())
-
         self.controller.after(timeDelay, self.dataSetup)
 
     def dataSetup(self):
@@ -46,8 +43,6 @@ class Algorithm(tk.Frame):
                                  "WHERE Country=(?) AND Season=(?)", (self.country, self.season)).fetchall()
 
         self.currentLabel.config(text="Current task : Ranking teams - Cycle 1")
-
-        print(time.time())
 
         self.controller.after(timeDelay, self.mainAlgorithm)
 
@@ -101,20 +96,16 @@ class Algorithm(tk.Frame):
             self.teamDict[teams[3]][1] += abs(scoreChanges[1])
 
         self.cyclesCompletedCount += 1
-        print(self.cyclesCompletedCount, time.time())
-
-        self.currentLabel.config(text="Current task : Ranking teams - Cycle " + str(self.cyclesCompletedCount + 1))
 
         if self.cyclesCompletedCount == 10:
             self.currentLabel.config(text="Current task : Outputing results")
             self.controller.after(timeDelay, self.finalOutput)
 
         else:
-            self.controller.after(timeDelay, self.mainAlgorithm())
+            self.currentLabel.config(text="Current task : Ranking teams - Cycle {}".format(self.cyclesCompletedCount + 1))
+            self.controller.after(timeDelay, self.mainAlgorithm)
 
     def finalOutput(self):
-        print(time.time())
-
         calculatedSkill = []
         for teamNum in self.teamDict:
             calculatedSkill.append(self.teamDict[teamNum][0])
@@ -145,7 +136,5 @@ class Algorithm(tk.Frame):
             row += 1
 
         book.save('Sample.xls')  # save the sheet to a file
-
-        print(time.time())
 
         self.controller.show_home()
