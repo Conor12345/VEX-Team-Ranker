@@ -1,4 +1,3 @@
-import pycountry
 import re
 
 def text(size=20):
@@ -26,3 +25,6 @@ def isOnlySpaces(listIn):
         if not bool(re.match("^ +$", item)):
             return False
     return True
+
+def remap(x, in_min, in_max, out_min, out_max):
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
