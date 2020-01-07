@@ -3,8 +3,8 @@ import tkinter as tk
 
 import matplotlib.pyplot as plt
 import xlwt
-from scipy.odr import *
 from numpy import tan, arctan
+from scipy.odr import *
 
 import event_management
 import global_variables
@@ -122,29 +122,49 @@ class Algorithm(tk.Frame):
         for teamNum in self.teamDict:
             variance.append(self.teamDict[teamNum][1])
 
-        plt.plot([x for x in range(len(self.teamDict))], sorted(calculatedSkill), "ro")
+        plt.plot([x + 1 for x in range(len(self.teamDict))], sorted(calculatedSkill), "ro")
         plt.ylabel("Calculated skill values")
 
         plt.show()
 
-        linear = Model(normaliseFunction)
+        model = Model(normaliseFunction)
         x = [j + 1 for j in range(len(calculatedSkill))]
 
         mydata = RealData(x, sorted(calculatedSkill))
-        myodr = ODR(mydata, linear, beta0=[1. for i in range(3)])
+        myodr = ODR(mydata, model, beta0=[10., 100., 0.001])
 
         myoutput = myodr.run()
         values = myoutput.beta
-        print(values)
 
-        newy = []
+        estimatedY = []
         for xcoord in x:
-            newy.append(normaliseFunction(values, xcoord))
+            estimatedY.append(normaliseFunction(values, xcoord))
 
-        plt.plot(x, newy, "ro")
+        plt.plot(x, estimatedY, "ro")
         plt.ylabel("Estimated skill values")
         plt.show()
 
+        minMax = [50, 50]
+        for team in self.teamDict:
+            normalisedValue = inverseF(values, self.teamDict[team][0])
+            if normalisedValue < minMax[0]:
+                minMax[0] = normalisedValue
+            elif normalisedValue > minMax[1]:
+                minMax[1] = normalisedValue
+            self.teamDict[team][0] = normalisedValue
+
+        normalisedY = []
+        for team in self.teamDict:
+            self.teamDict[team][0] = global_variables.remap(self.teamDict[team][0], minMax[0], minMax[1], 0, 100)
+            normalisedY.append(self.teamDict[team][0])
+
+        plt.plot(x, sorted(normalisedY), "ro")
+        plt.ylabel("Normalised skill values")
+        plt.show()
+
+        self.controller.show_home()
+    
+    def spreadsheetOutput(self, calculatedSkill, variance, newy):
         book = xlwt.Workbook()  # initiate sheet
         sheet = book.add_sheet('Sheet 1')  # create a blank sheet
 
@@ -165,4 +185,4 @@ class Algorithm(tk.Frame):
 
         book.save('Sample.xls')  # save the sheet to a file
 
-        self.controller.show_home()
+        
