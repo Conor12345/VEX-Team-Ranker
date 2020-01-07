@@ -3,6 +3,8 @@ import tkinter as tk
 
 import matplotlib.pyplot as plt
 import xlwt
+from scipy.odr import *
+from numpy import tan, arctan
 
 import event_management
 import global_variables
@@ -10,15 +12,20 @@ import team_management
 
 timeDelay = 1000
 
+def normaliseFunction(Coefs, X):
+    return Coefs[0] + Coefs[1] * tan(Coefs[2] * X)
+
+def inverseF(Coefs, X):
+    return (1 / Coefs[2]) * arctan((X - Coefs[0]) / Coefs[1])
 
 class Algorithm(tk.Frame):
     def __init__(self, parent, controller):
         self.controller = controller
         tk.Frame.__init__(self, parent)
 
+    def bindSetup(self):
         self.cyclesCompletedCount = 0
 
-    def bindSetup(self):
         self.currentLabel = tk.Label(self, text="Current task : Fetching complete team list", font=global_variables.text(20))
         self.currentLabel.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
@@ -49,6 +56,7 @@ class Algorithm(tk.Frame):
     def mainAlgorithm(self):
         # MatchLevel 0, RedTeam1 1, RedTeam2 2, BlueTeam1 3, BlueTeam2 4, RedScore 5, BlueScore 6, Season 7
         # (2, '10173S', '10173X', '1408G', '33434A', 12, 16, '2019-03-01')
+
         for match in self.results:
             teams = match[1:5]
             roundNum = match[0]
@@ -99,13 +107,13 @@ class Algorithm(tk.Frame):
 
         if self.cyclesCompletedCount == 10:
             self.currentLabel.config(text="Current task : Outputing results")
-            self.controller.after(timeDelay, self.finalOutput)
+            self.controller.after(timeDelay, self.output)
 
         else:
             self.currentLabel.config(text="Current task : Ranking teams - Cycle {}".format(self.cyclesCompletedCount + 1))
             self.controller.after(timeDelay, self.mainAlgorithm)
 
-    def finalOutput(self):
+    def output(self):
         calculatedSkill = []
         for teamNum in self.teamDict:
             calculatedSkill.append(self.teamDict[teamNum][0])
@@ -119,16 +127,36 @@ class Algorithm(tk.Frame):
 
         plt.show()
 
+        linear = Model(normaliseFunction)
+        x = [j + 1 for j in range(len(calculatedSkill))]
+
+        mydata = RealData(x, sorted(calculatedSkill))
+        myodr = ODR(mydata, linear, beta0=[1. for i in range(3)])
+
+        myoutput = myodr.run()
+        values = myoutput.beta
+        print(values)
+
+        newy = []
+        for xcoord in x:
+            newy.append(normaliseFunction(values, xcoord))
+
+        plt.plot(x, newy, "ro")
+        plt.ylabel("Estimated skill values")
+        plt.show()
+
         book = xlwt.Workbook()  # initiate sheet
         sheet = book.add_sheet('Sheet 1')  # create a blank sheet
 
         sheet.write(1, 1, "Team Number")
         sheet.write(1, 2, "Calculated Skill")
         sheet.write(1, 3, "Variance")
+        sheet.write(1, 4, "Estimated Skill")
 
         for i in range(len(calculatedSkill)):
             sheet.write(i + 2, 2, calculatedSkill[i])
             sheet.write(i + 2, 3, variance[i])
+            sheet.write(i + 2, 4, newy[i])
 
         row = 2
         for team in self.teamDict:
