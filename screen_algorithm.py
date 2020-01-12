@@ -1,8 +1,6 @@
 import sqlite3
 import tkinter as tk
 
-import matplotlib.pyplot as plt
-import xlwt
 from numpy import tan, arctan
 from scipy.odr import *
 
@@ -12,11 +10,14 @@ import team_management
 
 timeDelay = 1000
 
+
 def normaliseFunction(Coefs, X):
     return Coefs[0] + Coefs[1] * tan(Coefs[2] * X)
 
+
 def inverseF(Coefs, X):
     return (1 / Coefs[2]) * arctan((X - Coefs[0]) / Coefs[1])
+
 
 class Algorithm(tk.Frame):
     def __init__(self, parent, controller):
@@ -41,7 +42,7 @@ class Algorithm(tk.Frame):
         for eventName in self.eventNames:
             for teamNum in team_management.get_team_list(eventName):
                 if teamNum not in self.teamDict:
-                    self.teamDict[teamNum] = [team_management.get_team_skill(teamNum), 0]
+                    self.teamDict[teamNum] = team_management.get_team_skill(teamNum)
 
         db = sqlite3.connect("database.db")
         c = db.cursor()
@@ -65,7 +66,7 @@ class Algorithm(tk.Frame):
 
             skillRating = []
             for team in teams:
-                skillRating.append(self.teamDict[team][0])
+                skillRating.append(self.teamDict[team])
 
             probabilities = [(skillRating[0] + skillRating[1]) / sum(skillRating), (skillRating[2] + skillRating[3]) / sum(skillRating)]
 
@@ -93,15 +94,10 @@ class Algorithm(tk.Frame):
             scoreChanges[0] = scoreChanges[0] * probabilities[0] * roundNum
             scoreChanges[1] = scoreChanges[1] * probabilities[1] * roundNum
 
-            self.teamDict[teams[0]][0] += scoreChanges[0]
-            self.teamDict[teams[1]][0] += scoreChanges[0]
-            self.teamDict[teams[2]][0] += scoreChanges[1]
-            self.teamDict[teams[3]][0] += scoreChanges[1]
-
-            self.teamDict[teams[0]][1] += abs(scoreChanges[0])
-            self.teamDict[teams[1]][1] += abs(scoreChanges[0])
-            self.teamDict[teams[2]][1] += abs(scoreChanges[1])
-            self.teamDict[teams[3]][1] += abs(scoreChanges[1])
+            self.teamDict[teams[0]] += scoreChanges[0]
+            self.teamDict[teams[1]] += scoreChanges[0]
+            self.teamDict[teams[2]] += scoreChanges[1]
+            self.teamDict[teams[3]] += scoreChanges[1]
 
         self.cyclesCompletedCount += 1
 
@@ -116,16 +112,7 @@ class Algorithm(tk.Frame):
     def output(self):
         calculatedSkill = []
         for teamNum in self.teamDict:
-            calculatedSkill.append(self.teamDict[teamNum][0])
-
-        variance = []
-        for teamNum in self.teamDict:
-            variance.append(self.teamDict[teamNum][1])
-
-        plt.plot([x + 1 for x in range(len(self.teamDict))], sorted(calculatedSkill), "ro")
-        plt.ylabel("Calculated skill values")
-
-        plt.show()
+            calculatedSkill.append(self.teamDict[teamNum])
 
         model = Model(normaliseFunction)
         x = [j + 1 for j in range(len(calculatedSkill))]
@@ -136,53 +123,18 @@ class Algorithm(tk.Frame):
         myoutput = myodr.run()
         values = myoutput.beta
 
-        estimatedY = []
-        for xcoord in x:
-            estimatedY.append(normaliseFunction(values, xcoord))
-
-        plt.plot(x, estimatedY, "ro")
-        plt.ylabel("Estimated skill values")
-        plt.show()
-
         minMax = [50, 50]
         for team in self.teamDict:
-            normalisedValue = inverseF(values, self.teamDict[team][0])
+            normalisedValue = inverseF(values, self.teamDict[team])
             if normalisedValue < minMax[0]:
                 minMax[0] = normalisedValue
             elif normalisedValue > minMax[1]:
                 minMax[1] = normalisedValue
-            self.teamDict[team][0] = normalisedValue
+            self.teamDict[team] = normalisedValue
 
         normalisedY = []
         for team in self.teamDict:
-            self.teamDict[team][0] = global_variables.remap(self.teamDict[team][0], minMax[0], minMax[1], 0, 100)
-            normalisedY.append(self.teamDict[team][0])
-
-        plt.plot(x, sorted(normalisedY), "ro")
-        plt.ylabel("Normalised skill values")
-        plt.show()
+            self.teamDict[team] = global_variables.remap(self.teamDict[team], minMax[0], minMax[1], 0, 100)
+            normalisedY.append(self.teamDict[team])
 
         self.controller.show_home()
-    
-    def spreadsheetOutput(self, calculatedSkill, variance, newy):
-        book = xlwt.Workbook()  # initiate sheet
-        sheet = book.add_sheet('Sheet 1')  # create a blank sheet
-
-        sheet.write(1, 1, "Team Number")
-        sheet.write(1, 2, "Calculated Skill")
-        sheet.write(1, 3, "Variance")
-        sheet.write(1, 4, "Estimated Skill")
-
-        for i in range(len(calculatedSkill)):
-            sheet.write(i + 2, 2, calculatedSkill[i])
-            sheet.write(i + 2, 3, variance[i])
-            sheet.write(i + 2, 4, newy[i])
-
-        row = 2
-        for team in self.teamDict:
-            sheet.write(row, 1, team)
-            row += 1
-
-        book.save('Sample.xls')  # save the sheet to a file
-
-        
