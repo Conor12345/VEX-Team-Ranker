@@ -42,7 +42,7 @@ class Algorithm(tk.Frame):
         for eventName in self.eventNames:
             for teamNum in team_management.get_team_list(eventName):
                 if teamNum not in self.teamDict:
-                    self.teamDict[teamNum] = team_management.get_team_skill(teamNum)
+                    self.teamDict[teamNum] = [team_management.get_team_skill(teamNum), [0,0,0]]
 
         db = sqlite3.connect("database.db")
         c = db.cursor()
@@ -66,7 +66,7 @@ class Algorithm(tk.Frame):
 
             skillRating = []
             for team in teams:
-                skillRating.append(self.teamDict[team])
+                skillRating.append(self.teamDict[team][0])
 
             probabilities = [(skillRating[0] + skillRating[1]) / sum(skillRating), (skillRating[2] + skillRating[3]) / sum(skillRating)]
 
@@ -94,10 +94,10 @@ class Algorithm(tk.Frame):
             scoreChanges[0] = scoreChanges[0] * probabilities[0] * roundNum
             scoreChanges[1] = scoreChanges[1] * probabilities[1] * roundNum
 
-            self.teamDict[teams[0]] += scoreChanges[0]
-            self.teamDict[teams[1]] += scoreChanges[0]
-            self.teamDict[teams[2]] += scoreChanges[1]
-            self.teamDict[teams[3]] += scoreChanges[1]
+            self.teamDict[teams[0]][0] += scoreChanges[0]
+            self.teamDict[teams[1]][0] += scoreChanges[0]
+            self.teamDict[teams[2]][0] += scoreChanges[1]
+            self.teamDict[teams[3]][0] += scoreChanges[1]
 
         self.cyclesCompletedCount += 1
 
@@ -112,7 +112,7 @@ class Algorithm(tk.Frame):
     def output(self):
         calculatedSkill = []
         for teamNum in self.teamDict:
-            calculatedSkill.append(self.teamDict[teamNum])
+            calculatedSkill.append(self.teamDict[teamNum][0])
 
         model = Model(normaliseFunction)
         x = [j + 1 for j in range(len(calculatedSkill))]
@@ -125,16 +125,14 @@ class Algorithm(tk.Frame):
 
         minMax = [50, 50]
         for team in self.teamDict:
-            normalisedValue = inverseF(values, self.teamDict[team])
+            normalisedValue = inverseF(values, self.teamDict[team][0])
             if normalisedValue < minMax[0]:
                 minMax[0] = normalisedValue
             elif normalisedValue > minMax[1]:
                 minMax[1] = normalisedValue
-            self.teamDict[team] = normalisedValue
+            self.teamDict[team][0] = normalisedValue
 
-        normalisedY = []
         for team in self.teamDict:
-            self.teamDict[team] = global_variables.remap(self.teamDict[team], minMax[0], minMax[1], 0, 100)
-            normalisedY.append(self.teamDict[team])
+            self.teamDict[team][0] = global_variables.remap(self.teamDict[team][0], minMax[0], minMax[1], 0, 100)
 
-        self.controller.show_home()
+        self.controller.show_results()
