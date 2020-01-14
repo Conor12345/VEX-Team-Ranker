@@ -26,7 +26,7 @@ class Database(tk.Frame):
         self.databaseButton = tk.Button(self.navbarGrid, text="Database", font=global_variables.text())
         self.databaseButton.grid(row=0, column=2)
 
-        self.resultsButton = tk.Button(self.navbarGrid, text="Results", font=global_variables.text())
+        self.resultsButton = tk.Button(self.navbarGrid, text="Results", font=global_variables.text(), command=self.controller.show_results)
         self.resultsButton.grid(row=0, column=3)
 
         self.smallMenu = tk.Frame(self, padx=10, pady=10)

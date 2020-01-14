@@ -6,6 +6,7 @@ from screen_algorithm import Algorithm
 from screen_database import Database
 from screen_home import Home
 from screen_login import Login
+from screen_results import Results
 
 
 class Main(tk.Tk):
@@ -29,7 +30,7 @@ class Main(tk.Tk):
 
         self.frames = {}
 
-        for F in [Login, Home, Database, Algorithm]:
+        for F in [Login, Home, Database, Algorithm, Results]:
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -55,6 +56,9 @@ class Main(tk.Tk):
 
     def show_algorithm(self):
         self.show_frame(Algorithm)
+
+    def show_results(self):
+        self.show_frame(Results)
 
 app = Main()
 app.state(pc_identifier.getType())
