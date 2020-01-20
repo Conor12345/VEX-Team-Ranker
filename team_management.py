@@ -54,4 +54,26 @@ def get_team_skill(TeamNum):
         return False
     db = sqlite3.connect("database.db")
     c = db.cursor()
-    return c.execute('SELECT * FROM tblTeams where TeamNum = (?)', (TeamNum,)).fetchall()[0][4]
+    return c.execute('SELECT SkillRating FROM tblTeams where TeamNum = (?)', (TeamNum,)).fetchall()[0][0]
+
+def update_team_skill(TeamNum, SkillRating):
+    if not check_team_presence(TeamNum):
+        return False
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    c.execute('UPDATE tblTeams SET SkillRating = (?) WHERE TeamNum = (?)', (SkillRating, TeamNum))
+    db.commit()
+
+def get_team_name(TeamNum):
+    if not check_team_presence(TeamNum):
+        return False
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    return c.execute('SELECT TeamName FROM tblTeams where TeamNum = (?)', (TeamNum,)).fetchall()[0][0]
+
+def get_team_city(TeamNum):
+    if not check_team_presence(TeamNum):
+        return False
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    return c.execute('SELECT City FROM tblTeams where TeamNum = (?)', (TeamNum,)).fetchall()[0][0]
