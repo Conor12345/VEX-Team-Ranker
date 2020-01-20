@@ -1,13 +1,11 @@
-import sqlite3
 import tkinter as tk
-from math import ceil
 
-import account_management
-import team_management
-import event_management
 import global_variables
-import pc_identifier
-import screen_users
+import team_management
+
+
+def get5thElement(array):
+    return array[4]
 
 
 class Results(tk.Frame):
@@ -31,7 +29,7 @@ class Results(tk.Frame):
         self.mainScreenGrid.grid(row=2, column=0, columnspan=4)
 
         self.descriptionLabel = tk.Label(self.mainScreenGrid, text="Select teams to compare", font=global_variables.text())
-        self.descriptionLabel.grid(row=1, column=0)
+        self.descriptionLabel.grid(row=1, column=0, padx=10)
 
         self.showTeamButton = tk.Button(self.mainScreenGrid, text="Show highlighted team details", font=global_variables.text(14))
         self.showTeamButton.grid(row=2, column=0)
@@ -40,18 +38,31 @@ class Results(tk.Frame):
         self.compareSelectedButton.grid(row=3, column=0)
 
         self.dataBox = tk.Listbox(self.mainScreenGrid, width=140, height=42)
-        self.dataBox.grid(row=1, column=1, rowspan=8)
+        self.dataBox.grid(row=1, column=2, rowspan=20)
         self.dataBox.config(font=("Courier", 12))
 
+        self.tickBoxGrid = tk.Frame(self.mainScreenGrid)
+        self.tickBoxGrid.grid(row=0, column=1, rowspan=20, padx=10)
+
+        selectLabel = tk.Label(self.tickBoxGrid, text="Selected?", font=global_variables.text(12))
+        selectLabel.grid(row=0, column=0)
+
+        self.tickBoxData = []
+        self.tickBoxes = []
+        for i in range(20):
+            self.tickBoxData.append(tk.IntVar())
+            self.tickBoxes.append(tk.Checkbutton(self.tickBoxGrid, variable=self.tickBoxData[i]))
+            self.tickBoxes[-1].grid(row=i + 1, column=0, pady=7)
 
     def bindSetup(self):
+        self.currentScreen = 0
         self.updateData()
 
     def updateData(self):
         # Rank, Team Num, Team Name, Team City, Skill rating, Match win rate, Total awards
 
         self.display = []
-        for team in self.controller.selectedTeams:
+        for team in self.controller.selectedTeams + [self.controller.teamNum]:
             tempArray = [None for x in range(7)]
 
             tempArray[1] = team
@@ -60,6 +71,11 @@ class Results(tk.Frame):
             tempArray[4] = team_management.get_team_skill(team)
 
             self.display.append(tempArray)
+
+        self.display.sort(key=get5thElement, reverse=True)
+
+        for i in range(len(self.display)):
+            self.display[i][0] = i + 1
 
         self.updateScreen()
 
@@ -73,14 +89,15 @@ class Results(tk.Frame):
         self.dataBox.insert(tk.END, row)  # Inserts header row
         self.dataBox.insert(tk.END, " ")  # Inserts empty row for spacing
 
-        for result in self.display + [self.controller.teamNum]:  # Iterates through each record
+        for result in self.display[self.currentScreen * 20 : (self.currentScreen + 1) * 20]:  # Iterates through each record
             rows = [""]
             for record in result:  # Iterates though each column
                 if len(str(record)) <= self.columnWidth:  # If the data fits in the space without wrapping
                     rows[0] += str(record).ljust(self.columnWidth, " ")  # Adds record with padding on right to fill space
                 else:
-                    rows[0] += str(record)[:20].ljust(self.columnWidth, " ")
-
+                    rows[0] += str(record)[:19].ljust(self.columnWidth, " ")
             for row in rows:  # Iterates through each row in cage
                 self.dataBox.insert(tk.END, row)  # Inserts row into table
                 self.dataBox.insert(tk.END, " ")
+
+
