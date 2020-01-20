@@ -111,9 +111,6 @@ class Algorithm(tk.Frame):
             self.teamDict[teams[2]][0] += scoreChanges[1]
             self.teamDict[teams[3]][0] += scoreChanges[1]
 
-            for team in teams:
-                print(self.teamDict[team][1])
-
         self.cyclesCompletedCount += 1
 
         if self.cyclesCompletedCount == 10:
