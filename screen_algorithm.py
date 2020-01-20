@@ -42,7 +42,7 @@ class Algorithm(tk.Frame):
         for eventName in self.eventNames:
             for teamNum in team_management.get_team_list(eventName):
                 if teamNum not in self.teamDict:
-                    self.teamDict[teamNum] = [team_management.get_team_skill(teamNum), [0,0,0]]
+                    self.teamDict[teamNum] = [team_management.get_team_skill(teamNum), [0,0,0]] # [Skill, [W, L, D]]
 
         db = sqlite3.connect("database.db")
         c = db.cursor()
@@ -80,12 +80,24 @@ class Algorithm(tk.Frame):
             if score[0] == score[1]:
                 scoreChanges = [0.5, 0.5]
                 actualWinner = "Draw"
+                for team in teams:
+                    self.teamDict[team][1][2] += 1
+
             elif score[0] > score[1]:
                 scoreChanges = [1, -1]
                 actualWinner = "Red"
+                for redTeams in teams[0:2]:
+                    self.teamDict[redTeams][1][0] += 1
+                for blueTeams in teams[2:4]:
+                    self.teamDict[blueTeams][1][1] += 1
+
             else:
                 scoreChanges = [-1, 1]
                 actualWinner = "Blue"
+                for redTeams in teams[0:2]:
+                    self.teamDict[redTeams][1][1] += 1
+                for blueTeams in teams[2:4]:
+                    self.teamDict[blueTeams][1][0] += 1
 
             if expectedWinner != actualWinner and actualWinner != "Draw" and expectedWinner != "Draw":
                 probabilities[0] = 1 / probabilities[0]
@@ -98,6 +110,9 @@ class Algorithm(tk.Frame):
             self.teamDict[teams[1]][0] += scoreChanges[0]
             self.teamDict[teams[2]][0] += scoreChanges[1]
             self.teamDict[teams[3]][0] += scoreChanges[1]
+
+            for team in teams:
+                print(self.teamDict[team][1])
 
         self.cyclesCompletedCount += 1
 
@@ -134,5 +149,8 @@ class Algorithm(tk.Frame):
 
         for team in self.teamDict:
             self.teamDict[team][0] = global_variables.remap(self.teamDict[team][0], minMax[0], minMax[1], 0, 100)
+
+        for team in self.teamDict:
+            team_management.update_team_skill(team, float(self.teamDict[team][0]))
 
         self.controller.show_results()
