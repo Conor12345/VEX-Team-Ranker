@@ -1,4 +1,5 @@
 import tkinter as tk
+from math import ceil
 
 import global_variables
 import team_management
@@ -25,24 +26,21 @@ class Results(tk.Frame):
         self.resultsButton = tk.Button(self.navbarGrid, text="Results", font=global_variables.text())
         self.resultsButton.grid(row=0, column=3)
 
-        self.mainScreenGrid = tk.Frame(self)
-        self.mainScreenGrid.grid(row=2, column=0, columnspan=4)
-
-        self.descriptionLabel = tk.Label(self.mainScreenGrid, text="Select teams to compare", font=global_variables.text())
+        self.descriptionLabel = tk.Label(self, text="Select teams to compare", font=global_variables.text())
         self.descriptionLabel.grid(row=1, column=0, padx=10)
 
-        self.showTeamButton = tk.Button(self.mainScreenGrid, text="Show highlighted team details", font=global_variables.text(14))
+        self.showTeamButton = tk.Button(self, text="Show highlighted team details", font=global_variables.text(14))
         self.showTeamButton.grid(row=2, column=0)
 
-        self.compareSelectedButton = tk.Button(self.mainScreenGrid, text="Compare selected teams", font=global_variables.text(14))
+        self.compareSelectedButton = tk.Button(self, text="Compare selected teams", font=global_variables.text(14))
         self.compareSelectedButton.grid(row=3, column=0)
 
-        self.dataBox = tk.Listbox(self.mainScreenGrid, width=140, height=42)
+        self.dataBox = tk.Listbox(self, width=140, height=42)
         self.dataBox.grid(row=1, column=2, rowspan=20)
         self.dataBox.config(font=("Courier", 12))
 
-        self.tickBoxGrid = tk.Frame(self.mainScreenGrid)
-        self.tickBoxGrid.grid(row=0, column=1, rowspan=20, padx=10)
+        self.tickBoxGrid = tk.Frame(self)
+        self.tickBoxGrid.grid(row=1, column=1, rowspan=20, padx=10)
 
         selectLabel = tk.Label(self.tickBoxGrid, text="Selected?", font=global_variables.text(12))
         selectLabel.grid(row=0, column=0)
@@ -53,6 +51,12 @@ class Results(tk.Frame):
             self.tickBoxData.append(tk.IntVar())
             self.tickBoxes.append(tk.Checkbutton(self.tickBoxGrid, variable=self.tickBoxData[i]))
             self.tickBoxes[-1].grid(row=i + 1, column=0, pady=7)
+
+        self.upButton = tk.Button(self, text="/\\", command=self.moveUp)
+        self.upButton.grid(row=0, column=2)
+
+        self.downButton = tk.Button(self, text="\\/",command=self.moveDown)
+        self.downButton.grid(row=30, column=2, pady=10)
 
     def bindSetup(self):
         self.currentScreen = 0
@@ -68,7 +72,11 @@ class Results(tk.Frame):
             tempArray[1] = team
             tempArray[2] = team_management.get_team_name(team)
             tempArray[3] = team_management.get_team_city(team)
-            tempArray[4] = team_management.get_team_skill(team)
+            tempArray[4] = round(team_management.get_team_skill(team), 3)
+
+            if self.controller.teamDict is not None:
+                winLossDraw = self.controller.teamDict[team][1]
+                tempArray[5] = round((winLossDraw[0] + 0.5 * winLossDraw[2]) / sum(winLossDraw), 3)
 
             self.display.append(tempArray)
 
@@ -100,4 +108,12 @@ class Results(tk.Frame):
                 self.dataBox.insert(tk.END, row)  # Inserts row into table
                 self.dataBox.insert(tk.END, " ")
 
+    def moveDown(self):
+        if self.currentScreen < (len(self.display) / 20) - 1:
+            self.currentScreen += 1
+            self.updateScreen()
 
+    def moveUp(self):
+        if self.currentScreen != 0:
+            self.currentScreen -= 1
+            self.updateScreen()
