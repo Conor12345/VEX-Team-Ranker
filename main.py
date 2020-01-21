@@ -23,6 +23,7 @@ class Main(tk.Tk):
         self.currentUser = ""
         self.isAdmin = False
         self.teamNum = ""
+        self.teamDict = None
 
         self.selectedTeams = []
         self.selectedSeason = ""

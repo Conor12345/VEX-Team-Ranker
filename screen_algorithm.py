@@ -150,4 +150,6 @@ class Algorithm(tk.Frame):
         for team in self.teamDict:
             team_management.update_team_skill(team, float(self.teamDict[team][0]))
 
+        self.controller.teamDict = self.teamDict.copy()
+
         self.controller.show_results()
