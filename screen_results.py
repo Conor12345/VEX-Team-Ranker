@@ -1,6 +1,6 @@
 import tkinter as tk
-from math import ceil
 
+import api_query
 import global_variables
 import team_management
 
@@ -34,6 +34,9 @@ class Results(tk.Frame):
 
         self.compareSelectedButton = tk.Button(self, text="Compare selected teams", font=global_variables.text(14))
         self.compareSelectedButton.grid(row=3, column=0)
+
+        self.fetchAwardDataButton = tk.Button(self, text="Collect award data", font=global_variables.text(14), command=self.fetchAwardData)
+        self.fetchAwardDataButton.grid(row=4, column=0)
 
         self.dataBox = tk.Listbox(self, width=140, height=42)
         self.dataBox.grid(row=1, column=2, rowspan=20)
@@ -117,3 +120,10 @@ class Results(tk.Frame):
         if self.currentScreen != 0:
             self.currentScreen -= 1
             self.updateScreen()
+
+    def fetchAwardData(self):
+        for row in self.display:
+            if self.controller.selectedSeason != "":
+                row[6] = api_query.get_num_awards(row[1], self.controller.selectedSeason)
+        self.updateScreen()
+
