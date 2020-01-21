@@ -1,4 +1,6 @@
-import json, requests
+import json
+import requests
+
 
 def get_team_data(TeamNum):
     response = requests.get("https://api.vexdb.io/v1/get_teams?program=VRC&team=" + TeamNum)
@@ -24,3 +26,8 @@ def get_event_data(query):
         return False
     else:
         return  data["result"]
+
+def get_num_awards(TeamNum, Season):
+    response = requests.get("https://api.vexdb.io/v1/get_awards?team=" + TeamNum + "&season=" + Season + "&nodata=true")
+    data = json.loads(response.text)
+    return data["size"]
