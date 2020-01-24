@@ -9,6 +9,12 @@ import team_management
 def get5thElement(array):
     return array[4]
 
+def get6thElement(array):
+    return array[5]
+
+def get7thElement(array):
+    return array[6]
+
 
 class Results(tk.Frame):
     def __init__(self, parent, controller):
@@ -16,7 +22,7 @@ class Results(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         self.navbarGrid = tk.Frame(self, padx=10, pady=10)
-        self.navbarGrid.grid(row=0, column=0)
+        self.navbarGrid.grid(row=0, column=0, rowspan=2)
 
         self.homeButton = tk.Button(self.navbarGrid, text="Home", font=global_variables.text(), command=self.controller.show_home)
         self.homeButton.grid(row=0, column=1)
@@ -28,23 +34,23 @@ class Results(tk.Frame):
         self.resultsButton.grid(row=0, column=3)
 
         self.descriptionLabel = tk.Label(self, text="Select teams to compare", font=global_variables.text())
-        self.descriptionLabel.grid(row=1, column=0, padx=10)
+        self.descriptionLabel.grid(row=2, column=0, padx=10)
 
         self.showTeamButton = tk.Button(self, text="Show highlighted team details", font=global_variables.text(14))
-        self.showTeamButton.grid(row=2, column=0)
+        self.showTeamButton.grid(row=3, column=0)
 
         self.compareSelectedButton = tk.Button(self, text="Compare selected teams", font=global_variables.text(14))
-        self.compareSelectedButton.grid(row=3, column=0)
+        self.compareSelectedButton.grid(row=4, column=0)
 
         self.fetchAwardDataButton = tk.Button(self, text="Collect award data", font=global_variables.text(14), command=self.fetchAwardData)
-        self.fetchAwardDataButton.grid(row=4, column=0)
+        self.fetchAwardDataButton.grid(row=5, column=0)
 
         self.dataBox = tk.Listbox(self, width=140, height=42)
-        self.dataBox.grid(row=1, column=2, rowspan=20)
+        self.dataBox.grid(row=2, column=2, rowspan=20, columnspan=14)
         self.dataBox.config(font=("Courier", 12))
 
         self.tickBoxGrid = tk.Frame(self)
-        self.tickBoxGrid.grid(row=1, column=1, rowspan=20, padx=10)
+        self.tickBoxGrid.grid(row=2, column=1, rowspan=20, padx=10)
 
         selectLabel = tk.Label(self.tickBoxGrid, text="Selected?", font=global_variables.text(12))
         selectLabel.grid(row=0, column=0)
@@ -56,11 +62,36 @@ class Results(tk.Frame):
             self.tickBoxes.append(tk.Checkbutton(self.tickBoxGrid, variable=self.tickBoxData[i]))
             self.tickBoxes[-1].grid(row=i + 1, column=0, pady=7)
 
-        self.upButton = tk.Button(self, text="/\\", command=self.moveUp)
-        self.upButton.grid(row=0, column=2)
+        self.upButton = tk.Button(self, text="   /\\   ", command=self.moveUp) # Smallest to biggest
+        self.upButton.grid(row=0, column=8, pady=10, columnspan=2)
 
-        self.downButton = tk.Button(self, text="\\/",command=self.moveDown)
-        self.downButton.grid(row=30, column=2, pady=10)
+        self.downButton = tk.Button(self, text="   \\/   ",command=self.moveDown) # Biggest to smallest
+        self.downButton.grid(row=30, column=8, pady=10, columnspan=2)
+
+        self.sortBoxes = []
+        temp = [tk.Button(self, text="\\/", command=lambda: self.reSortList(0, 0)),
+                tk.Button(self, text="/\\", command=lambda: self.reSortList(0, 1))]
+
+        temp[-2].grid(row=1, column=10 , pady=5)
+        temp[-1].grid(row=1, column=11, pady=5)
+        self.sortBoxes.append(temp)
+
+        temp = [tk.Button(self, text="\\/", command=lambda: self.reSortList(1, 0)),
+               tk.Button(self, text="/\\", command=lambda: self.reSortList(1, 1))]
+
+        temp[-2].grid(row=1, column=12, pady=5)
+        temp[-1].grid(row=1, column=13, pady=5)
+        self.sortBoxes.append(temp)
+
+        temp = [tk.Button(self, text="\\/", command=lambda: self.reSortList(2, 0)),
+               tk.Button(self, text="/\\", command=lambda: self.reSortList(2, 1))]
+
+        temp[-2].grid(row=1, column=14, pady=5)
+        temp[-1].grid(row=1, column=15, pady=5)
+        self.sortBoxes.append(temp)
+
+        self.sortBoxes[0][0]["relief"] = "sunken"
+
 
     def bindSetup(self):
         self.currentScreen = 0
@@ -86,7 +117,6 @@ class Results(tk.Frame):
             self.display.append(tempArray)
 
         self.display.sort(key=get5thElement, reverse=True)
-
         for i in range(len(self.display)):
             self.display[i][0] = i + 1
 
@@ -135,12 +165,33 @@ class Results(tk.Frame):
 
     def storeButtonStates(self):
         for i in range(0,20):
-            if self.tickBoxData[i].get() == 1:
-                self.buttonStates[i + 20 * self.currentScreen] = 1
-            else:
-                self.buttonStates[i + 20 * self.currentScreen] = 0
+            self.buttonStates[i + 20 * self.currentScreen] = self.tickBoxData[i].get()
             self.tickBoxData[i].set(0)
 
     def setButtonStates(self):
         for i in range(0, 20):
             self.tickBoxData[i].set(self.buttonStates[i + 20 * self.currentScreen])
+
+    def reSortList(self, col, direc):
+        for column in self.sortBoxes: # Unsink previous sort
+            for button in column:
+                if button["relief"] == "sunken":
+                    button["relief"] = "raised"
+
+        if direc == 0:
+            state = True
+        else:
+            state = False
+
+        print(col, direc)
+
+        if col == 0:
+            self.display.sort(key=get5thElement, reverse=state)
+        elif col == 1:
+            self.display.sort(key=get6thElement, reverse=state)
+        else:
+            self.display.sort(key=get7thElement, reverse=state)
+
+        self.sortBoxes[col][direc]["relief"] = "sunken"
+
+        self.updateScreen()
