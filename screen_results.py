@@ -1,4 +1,5 @@
 import tkinter as tk
+from math import ceil
 
 import api_query
 import global_variables
@@ -63,13 +64,14 @@ class Results(tk.Frame):
 
     def bindSetup(self):
         self.currentScreen = 0
+        self.buttonStates = [0 for i in range(ceil(len(set(self.controller.selectedTeams + [self.controller.teamNum])) / 20) * 20)]
         self.updateData()
 
     def updateData(self):
         # Rank, Team Num, Team Name, Team City, Skill rating, Match win rate, Total awards
 
         self.display = []
-        for team in self.controller.selectedTeams + [self.controller.teamNum]:
+        for team in set(self.controller.selectedTeams + [self.controller.teamNum]):
             tempArray = [None for x in range(7)]
 
             tempArray[1] = team
@@ -106,18 +108,22 @@ class Results(tk.Frame):
                 if len(str(record)) <= self.columnWidth:  # If the data fits in the space without wrapping
                     rows[0] += str(record).ljust(self.columnWidth, " ")  # Adds record with padding on right to fill space
                 else:
-                    rows[0] += str(record)[:19].ljust(self.columnWidth, " ")
+                    rows[0] += str(record)[:self.columnWidth - 1].ljust(self.columnWidth, " ")
             for row in rows:  # Iterates through each row in cage
                 self.dataBox.insert(tk.END, row)  # Inserts row into table
                 self.dataBox.insert(tk.END, " ")
 
+        self.setButtonStates()
+
     def moveDown(self):
         if self.currentScreen < (len(self.display) / 20) - 1:
+            self.storeButtonStates()
             self.currentScreen += 1
             self.updateScreen()
 
     def moveUp(self):
         if self.currentScreen != 0:
+            self.storeButtonStates()
             self.currentScreen -= 1
             self.updateScreen()
 
@@ -127,3 +133,14 @@ class Results(tk.Frame):
                 row[6] = api_query.get_num_awards(row[1], self.controller.selectedSeason)
         self.updateScreen()
 
+    def storeButtonStates(self):
+        for i in range(0,20):
+            if self.tickBoxData[i].get() == 1:
+                self.buttonStates[i + 20 * self.currentScreen] = 1
+            else:
+                self.buttonStates[i + 20 * self.currentScreen] = 0
+            self.tickBoxData[i].set(0)
+
+    def setButtonStates(self):
+        for i in range(0, 20):
+            self.tickBoxData[i].set(self.buttonStates[i + 20 * self.currentScreen])
