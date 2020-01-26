@@ -9,8 +9,10 @@ import team_management
 def get5thElement(array):
     return array[4]
 
+
 def get6thElement(array):
     return array[5]
+
 
 def get7thElement(array):
     return array[6]
@@ -59,32 +61,32 @@ class Results(tk.Frame):
         self.tickBoxes = []
         for i in range(20):
             self.tickBoxData.append(tk.IntVar())
-            self.tickBoxes.append(tk.Checkbutton(self.tickBoxGrid, variable=self.tickBoxData[i]))
+            self.tickBoxes.append(tk.Checkbutton(self.tickBoxGrid, variable=self.tickBoxData[i], command=self.updateSelectedBox))
             self.tickBoxes[-1].grid(row=i + 1, column=0, pady=7)
 
-        self.upButton = tk.Button(self, text="   /\\   ", command=self.moveUp) # Smallest to biggest
+        self.upButton = tk.Button(self, text="   /\\   ", command=self.moveUp)  # Smallest to biggest
         self.upButton.grid(row=0, column=8, pady=10, columnspan=2)
 
-        self.downButton = tk.Button(self, text="   \\/   ",command=self.moveDown) # Biggest to smallest
+        self.downButton = tk.Button(self, text="   \\/   ", command=self.moveDown)  # Biggest to smallest
         self.downButton.grid(row=30, column=8, pady=10, columnspan=2)
 
         self.sortBoxes = []
         temp = [tk.Button(self, text="\\/", command=lambda: self.reSortList(0, 0)),
                 tk.Button(self, text="/\\", command=lambda: self.reSortList(0, 1))]
 
-        temp[-2].grid(row=1, column=10 , pady=5)
+        temp[-2].grid(row=1, column=10, pady=5)
         temp[-1].grid(row=1, column=11, pady=5)
         self.sortBoxes.append(temp)
 
         temp = [tk.Button(self, text="\\/", command=lambda: self.reSortList(1, 0)),
-               tk.Button(self, text="/\\", command=lambda: self.reSortList(1, 1))]
+                tk.Button(self, text="/\\", command=lambda: self.reSortList(1, 1))]
 
         temp[-2].grid(row=1, column=12, pady=5)
         temp[-1].grid(row=1, column=13, pady=5)
         self.sortBoxes.append(temp)
 
         temp = [tk.Button(self, text="\\/", command=lambda: self.reSortList(2, 0)),
-               tk.Button(self, text="/\\", command=lambda: self.reSortList(2, 1))]
+                tk.Button(self, text="/\\", command=lambda: self.reSortList(2, 1))]
 
         temp[-2].grid(row=1, column=14, pady=5)
         temp[-1].grid(row=1, column=15, pady=5)
@@ -92,11 +94,18 @@ class Results(tk.Frame):
 
         self.sortBoxes[0][0]["relief"] = "sunken"
 
+        selectedLabel = tk.Label(self, text="Currently selected teams:", font=global_variables.text(12))
+        selectedLabel.grid(row=6, column=0)
+
+        self.selectedDataBox = tk.Listbox(self, width=30, height=8)
+        self.selectedDataBox.grid(row=7, column=0)
+        self.selectedDataBox.config(font=("Courier", 12))
 
     def bindSetup(self):
         self.currentScreen = 0
         self.buttonStates = [0 for i in range(ceil(len(set(self.controller.selectedTeams + [self.controller.teamNum])) / 20) * 20)]
         self.updateData()
+        self.updateSelectedBox()
 
     def updateData(self):
         # Rank, Team Num, Team Name, Team City, Skill rating, Match win rate, Total awards
@@ -132,16 +141,16 @@ class Results(tk.Frame):
         self.dataBox.insert(tk.END, row)  # Inserts header row
         self.dataBox.insert(tk.END, " ")  # Inserts empty row for spacing
 
-        for result in self.display[self.currentScreen * 20 : (self.currentScreen + 1) * 20]:  # Iterates through each record
-            rows = [""]
+        for result in self.display[self.currentScreen * 20: (self.currentScreen + 1) * 20]:  # Iterates through each record
+            row = ""
             for record in result:  # Iterates though each column
                 if len(str(record)) <= self.columnWidth:  # If the data fits in the space without wrapping
-                    rows[0] += str(record).ljust(self.columnWidth, " ")  # Adds record with padding on right to fill space
+                    row += str(record).ljust(self.columnWidth, " ")  # Adds record with padding on right to fill space
                 else:
-                    rows[0] += str(record)[:self.columnWidth - 1].ljust(self.columnWidth, " ")
-            for row in rows:  # Iterates through each row in cage
-                self.dataBox.insert(tk.END, row)  # Inserts row into table
-                self.dataBox.insert(tk.END, " ")
+                    row += str(record)[:self.columnWidth - 1].ljust(self.columnWidth, " ")
+
+            self.dataBox.insert(tk.END, row)  # Inserts row into table
+            self.dataBox.insert(tk.END, " ")
 
         self.setButtonStates()
 
@@ -163,17 +172,21 @@ class Results(tk.Frame):
                 row[6] = api_query.get_num_awards(row[1], self.controller.selectedSeason)
         self.updateScreen()
 
-    def storeButtonStates(self):
-        for i in range(0,20):
+    def storeButtonStates(self, destructive=True):
+        for i in range(0, 20):
             self.buttonStates[i + 20 * self.currentScreen] = self.tickBoxData[i].get()
-            self.tickBoxData[i].set(0)
+            if destructive:
+                self.tickBoxData[i].set(0)
 
     def setButtonStates(self):
         for i in range(0, 20):
             self.tickBoxData[i].set(self.buttonStates[i + 20 * self.currentScreen])
 
     def reSortList(self, col, direc):
-        for column in self.sortBoxes: # Unsink previous sort
+        if self.display[0][4 + col] is None:  # Ensures the selected column has sortable data
+            return False
+
+        for column in self.sortBoxes:  # Unsink previous sort
             for button in column:
                 if button["relief"] == "sunken":
                     button["relief"] = "raised"
@@ -182,8 +195,6 @@ class Results(tk.Frame):
             state = True
         else:
             state = False
-
-        print(col, direc)
 
         if col == 0:
             self.display.sort(key=get5thElement, reverse=state)
@@ -195,3 +206,28 @@ class Results(tk.Frame):
         self.sortBoxes[col][direc]["relief"] = "sunken"
 
         self.updateScreen()
+
+    def updateSelectedBox(self):
+        self.storeButtonStates(False)
+
+        selectedForCompare = []
+        for i in range(len(self.buttonStates)):
+            if self.buttonStates[i] == 1:
+                if i < len(self.display): # Ensures there is a result to select
+                    selectedForCompare.append(self.display[i][0:2])
+
+        self.selectedDataBox.delete(0, tk.END)  # Clears databox
+        row = ""
+        for header in ["Rank", "Team Number"]:  # Adds headers to table
+            row += str(header).ljust(15, " ")
+        self.selectedDataBox.insert(tk.END, row)  # Inserts header row
+        self.selectedDataBox.insert(tk.END, " ")  # Inserts empty row for spacing
+
+        for result in selectedForCompare:
+            row = ""
+            for record in result:  # Iterates though each column
+                if len(str(record)) <= 15:  # If the data fits in the space without wrapping
+                    row += str(record).ljust(15, " ")  # Adds record with padding on right to fill space
+                else:
+                    row += str(record)[:15 - 1].ljust(15, " ")
+            self.selectedDataBox.insert(tk.END, row)  # Inserts row into table
