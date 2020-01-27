@@ -1,5 +1,6 @@
 import sqlite3
 import tkinter as tk
+from math import ceil
 
 from numpy import tan, arctan
 from scipy.odr import *
@@ -152,4 +153,5 @@ class Algorithm(tk.Frame):
 
         self.controller.teamDict = self.teamDict.copy()
 
+        self.controller.buttonStates = [0 for i in range(ceil(len(set(self.controller.selectedTeams + [self.controller.teamNum])) / 20) * 20)]
         self.controller.show_results()

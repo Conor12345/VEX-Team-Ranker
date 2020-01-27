@@ -7,6 +7,7 @@ from screen_database import Database
 from screen_home import Home
 from screen_login import Login
 from screen_results import Results
+from screen_team import TeamView
 
 
 class Main(tk.Tk):
@@ -25,13 +26,16 @@ class Main(tk.Tk):
         self.teamNum = ""
         self.teamDict = None
 
+        self.buttonStates = [0 for i in range(20)]
+        self.teamDisplay = ""
+
         self.selectedTeams = []
         self.selectedSeason = ""
         self.selectedCountry = ""
 
         self.frames = {}
 
-        for F in [Login, Home, Database, Algorithm, Results]:
+        for F in [Login, Home, Database, Algorithm, Results, TeamView]:
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -60,6 +64,9 @@ class Main(tk.Tk):
 
     def show_results(self):
         self.show_frame(Results)
+
+    def show_team(self):
+        self.show_frame(TeamView)
 
 app = Main()
 app.state(pc_identifier.getType())

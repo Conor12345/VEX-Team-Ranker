@@ -1,5 +1,4 @@
 import tkinter as tk
-from math import ceil
 
 import api_query
 import global_variables
@@ -38,7 +37,7 @@ class Results(tk.Frame):
         self.descriptionLabel = tk.Label(self, text="Select teams to compare", font=global_variables.text())
         self.descriptionLabel.grid(row=2, column=0, padx=10)
 
-        self.showTeamButton = tk.Button(self, text="Show highlighted team details", font=global_variables.text(14))
+        self.showTeamButton = tk.Button(self, text="Show highlighted team details", font=global_variables.text(14), command=self.showTeamScreen)
         self.showTeamButton.grid(row=3, column=0)
 
         self.compareSelectedButton = tk.Button(self, text="Compare selected teams", font=global_variables.text(14))
@@ -103,7 +102,6 @@ class Results(tk.Frame):
 
     def bindSetup(self):
         self.currentScreen = 0
-        self.buttonStates = [0 for i in range(ceil(len(set(self.controller.selectedTeams + [self.controller.teamNum])) / 20) * 20)]
         self.updateData()
         self.updateSelectedBox()
 
@@ -174,13 +172,13 @@ class Results(tk.Frame):
 
     def storeButtonStates(self, destructive=True):
         for i in range(0, 20):
-            self.buttonStates[i + 20 * self.currentScreen] = self.tickBoxData[i].get()
+            self.controller.buttonStates[i + 20 * self.currentScreen] = self.tickBoxData[i].get()
             if destructive:
                 self.tickBoxData[i].set(0)
 
     def setButtonStates(self):
         for i in range(0, 20):
-            self.tickBoxData[i].set(self.buttonStates[i + 20 * self.currentScreen])
+            self.tickBoxData[i].set(self.controller.buttonStates[i + 20 * self.currentScreen])
 
     def reSortList(self, col, direc):
         if self.display[0][4 + col] is None:  # Ensures the selected column has sortable data
@@ -211,8 +209,8 @@ class Results(tk.Frame):
         self.storeButtonStates(False)
 
         selectedForCompare = []
-        for i in range(len(self.buttonStates)):
-            if self.buttonStates[i] == 1:
+        for i in range(len(self.controller.buttonStates)):
+            if self.controller.buttonStates[i] == 1:
                 if i < len(self.display): # Ensures there is a result to select
                     selectedForCompare.append(self.display[i][0:2])
 
@@ -231,3 +229,9 @@ class Results(tk.Frame):
                 else:
                     row += str(record)[:15 - 1].ljust(15, " ")
             self.selectedDataBox.insert(tk.END, row)  # Inserts row into table
+
+    def showTeamScreen(self):
+        teamNum = self.dataBox.get(tk.ACTIVE)
+        if teamNum[0] != "R" and teamNum[0] != " ":
+            self.controller.teamDisplay = teamNum[15:31].strip()
+            self.controller.show_team()
