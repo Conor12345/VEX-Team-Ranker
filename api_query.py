@@ -3,8 +3,11 @@ import requests
 
 
 def get_team_data(TeamNum):
-    response = requests.get("https://api.vexdb.io/v1/get_teams?program=VRC&team=" + TeamNum)
-    data = json.loads(response.text)
+    try:
+        response = requests.get("https://api.vexdb.io/v1/get_teams?program=VRC&team=" + TeamNum)
+        data = json.loads(response.text)
+    except:
+        return False
     if data["size"] == 0:
         return False
     else:
@@ -12,22 +15,42 @@ def get_team_data(TeamNum):
         return [temp["team_name"], temp["city"], temp["country"]]
 
 def get_match_data(EventID):
-    response = requests.get("https://api.vexdb.io/v1/get_matches?sku=" + EventID)
-    data = json.loads(response.text)
+    try:
+        response = requests.get("https://api.vexdb.io/v1/get_matches?sku=" + EventID)
+        data = json.loads(response.text)
+    except:
+        return False
     if data["size"] == 0:
         return False
     else:
         return  data["result"]
 
 def get_event_data(query):
-    response = requests.get("https://api.vexdb.io/v1/get_events?program=VRC&" + query)
-    data = json.loads(response.text)
+    try:
+        response = requests.get("https://api.vexdb.io/v1/get_events?program=VRC&" + query)
+        data = json.loads(response.text)
+    except:
+        return False
     if data["size"] == 0:
         return False
     else:
         return  data["result"]
 
+def get_awards(TeamNum, Season):
+    try:
+        response = requests.get("https://api.vexdb.io/v1/get_awards?team=" + TeamNum + "&season=" + Season)
+        data = json.loads(response.text)
+    except:
+        return False
+    return data["result"]
+
 def get_num_awards(TeamNum, Season):
-    response = requests.get("https://api.vexdb.io/v1/get_awards?team=" + TeamNum + "&season=" + Season + "&nodata=true")
-    data = json.loads(response.text)
-    return data["size"]
+    return len(get_awards(TeamNum, Season))
+
+def get_alt_skill(TeamNum, Season):
+    try:
+        response = requests.get("https://api.vexdb.io/v1/get_season_rankings?team=" + TeamNum + "&season=" + Season)
+        data = json.loads(response.text)
+    except:
+        return False
+    return data["result"][0]["vrating"]
