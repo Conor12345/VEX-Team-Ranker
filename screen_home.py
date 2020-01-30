@@ -11,7 +11,7 @@ class Home(tk.Frame):
         tk.Frame.__init__(self, parent)
 
         self.navbarGrid = tk.Frame(self, padx=10, pady=10)
-        self.navbarGrid.grid(row=0, column=0)
+        self.navbarGrid.grid(row=0, column=0, sticky="W")
 
         self.homeButton = tk.Button(self.navbarGrid, text="Home", font=global_variables.text())
         self.homeButton.grid(row=0, column=1)
@@ -25,7 +25,7 @@ class Home(tk.Frame):
         self.mainScreenGrid = tk.Frame(self)
         self.mainScreenGrid.grid(row=2, column=0, columnspan=4)
 
-        self.importEventGrid = tk.Frame(self.mainScreenGrid, padx=10, pady=10)
+        self.importEventGrid = tk.Frame(self.mainScreenGrid, padx=50, pady=10)
         self.importEventGrid.grid(row=2, column=0)
 
         importEventLabel = tk.Label(self.importEventGrid, text="Select teams via Event", font=global_variables.text())
@@ -86,7 +86,7 @@ class Home(tk.Frame):
         selectedTeamsLabel.grid(row=0, column=0, columnspan=2)
 
         self.dataListbox = tk.Listbox(self.dataGrid, width=10, height=16)
-        self.dataListbox.grid(row=2, column=0, rowspan=7)
+        self.dataListbox.grid(row=2, column=0, rowspan=7, padx=10, pady=10)
         self.dataListbox.config(font=global_variables.text(16))
 
         self.removeTeamButton = tk.Button(self.dataGrid, text="Remove selected team", font=global_variables.text(16), command=self.removeTeam)
@@ -95,7 +95,7 @@ class Home(tk.Frame):
         self.removeAllTeamsButton = tk.Button(self.dataGrid, text="Remove all teams", font=global_variables.text(16), command=self.removeAllTeams)
         self.removeAllTeamsButton.grid(row=3, column=1)
 
-        self.viewTeamDataButton = tk.Button(self.dataGrid, text="View selected team", font=global_variables.text(16))
+        self.viewTeamDataButton = tk.Button(self.dataGrid, text="View selected team", font=global_variables.text(16), command=self.showTeam)
         self.viewTeamDataButton.grid(row=4, column=1)
 
         for record in range(0, len(self.controller.selectedTeams)):
@@ -188,3 +188,8 @@ class Home(tk.Frame):
 
     def bindSetup(self):
         pass
+
+    def showTeam(self):
+        teamNum = self.dataListbox.get(tk.ACTIVE)
+        self.controller.teamDisplay = teamNum
+        self.controller.show_team()

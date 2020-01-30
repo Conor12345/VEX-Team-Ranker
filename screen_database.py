@@ -18,7 +18,7 @@ class Database(tk.Frame):
         self.switch = None
 
         self.navbarGrid = tk.Frame(self, padx=10, pady=10)
-        self.navbarGrid.grid(row=0, column=0)
+        self.navbarGrid.grid(row=0, column=0, sticky="w")
 
         self.homeButton = tk.Button(self.navbarGrid, text="Home", font=global_variables.text(), command=self.controller.show_home)
         self.homeButton.grid(row=0, column=1)
@@ -30,7 +30,7 @@ class Database(tk.Frame):
         self.resultsButton.grid(row=0, column=3)
 
         self.smallMenu = tk.Frame(self, padx=10, pady=10)
-        self.smallMenu.grid(row=1, column=0)
+        self.smallMenu.grid(row=1, column=0, sticky="w")
 
         self.eventButton = tk.Button(self.smallMenu, text="Events", command=self.show_events, font=global_variables.text(16))
         self.eventButton.grid(row=1, column=0)
@@ -162,6 +162,10 @@ class GeneralData(tk.Frame):
 
         elif self.tblName == "tblTeams":
             self.showMatches = tk.Button(self, text="Show corresponding matches", font=global_variables.text(14), command=self.switchToMatchViewTeam)
+            self.showMatches.grid(row=self.startRow, column=0, columnspan=2)
+            self.startRow += 1
+
+            self.showMatches = tk.Button(self, text="Show team details", font=global_variables.text(14), command=self.showTeamScreen)
             self.showMatches.grid(row=self.startRow, column=0, columnspan=2)
             self.startRow += 1
 
@@ -308,3 +312,10 @@ class GeneralData(tk.Frame):
             self.startRow += 1
         else:
             self.parent.show_update_users(UserName)
+
+    def showTeamScreen(self):
+        teamNum = self.dataBox.get(tk.ACTIVE)
+        print(teamNum)
+        if teamNum[0] != "T" and teamNum[0] != " ":
+            self.parent.controller.teamDisplay = teamNum[0:self.columnWidth].strip()
+            self.parent.controller.show_team()

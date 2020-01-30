@@ -34,6 +34,7 @@ class Main(tk.Tk):
         self.selectedCountry = ""
 
         self.frames = {}
+        self.currentFrame = Login
 
         for F in [Login, Home, Database, Algorithm, Results, TeamView]:
             frame = F(container, self)
@@ -54,15 +55,19 @@ class Main(tk.Tk):
         self.teamNum = account_management.get_user_data(UserName)[3]
 
     def show_database(self):
+        self.currentFrame = Database
         self.show_frame(Database)
 
     def show_home(self):
+        self.currentFrame = Home
         self.show_frame(Home)
 
     def show_algorithm(self):
+        self.currentFrame = Algorithm
         self.show_frame(Algorithm)
 
     def show_results(self):
+        self.currentFrame = Results
         self.show_frame(Results)
 
     def show_team(self):
