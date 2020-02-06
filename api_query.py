@@ -36,9 +36,9 @@ def get_event_data(query):
     else:
         return  data["result"]
 
-def get_awards(TeamNum, Season):
+def get_awards(TeamNum):
     try:
-        response = requests.get("https://api.vexdb.io/v1/get_awards?team=" + TeamNum + "&season=" + Season)
+        response = requests.get("https://api.vexdb.io/v1/get_awards?team=" + TeamNum)
         data = json.loads(response.text)
     except:
         return False
@@ -54,3 +54,11 @@ def get_alt_skill(TeamNum, Season):
     except:
         return False
     return data["result"][0]["vrating"]
+
+def get_event_results(EventID, TeamNum):
+    try:
+        response = requests.get("https://api.vexdb.io/v1/get_rankings?team=" + TeamNum + "&sku=" + EventID)
+        data = json.loads(response.text)
+        return data["result"][0]
+    except:
+        return False
