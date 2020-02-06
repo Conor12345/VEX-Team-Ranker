@@ -2,6 +2,7 @@ import tkinter as tk
 import sqlite3
 import global_variables
 import team_management
+import event_management
 import api_query
 
 class TeamView(tk.Frame):
@@ -37,18 +38,18 @@ class TeamView(tk.Frame):
         self.labels[-1].grid(row=rowNum, column=0, columnspan=2, padx=10)
         rowNum += 1
 
-        self.labels.append(tk.Label(self, text="Most recent skill rating: {}".format(round(team_management.get_team_skill(self.teamNum), 3)), font=global_variables.text(20)))
+        self.labels.append(tk.Label(self, text="Most recent skill rating: {}".format(round(team_management.get_team_skill(self.teamNum), 2)), font=global_variables.text(20)))
         self.labels[-1].grid(row=rowNum, column=0, columnspan=2, padx=10)
         rowNum += 1
 
-        matchWinRate = None
-        if self.controller.teamDict is not None:
-            if self.teamNum in self.controller.teamDict:
-                winLossDraw = self.controller.teamDict[self.teamNum][1]
-                matchWinRate = round((winLossDraw[0] + 0.5 * winLossDraw[2]) / sum(winLossDraw), 3)
+        matchWinRate = None # Sets none value to be overwritten if needed
+        if self.controller.teamDict is not None: # Checks if algorithm has run
+            if self.teamNum in self.controller.teamDict: # Checks whether selected team was included in comparision
+                winLossDraw = self.controller.teamDict[self.teamNum][1] # Stores win loss draw numbers locally
+                matchWinRate = str(round((winLossDraw[0] + 0.5 * winLossDraw[2]) / sum(winLossDraw), 3) * 100) + "%" # Calculates match win rate as %
 
-        self.labels.append(tk.Label(self, text="Match win rate: {}".format(matchWinRate), font=global_variables.text(20)))
-        self.labels[-1].grid(row=rowNum, column=0, columnspan=2)
+        self.labels.append(tk.Label(self, text="Match win rate: {}".format(matchWinRate), font=global_variables.text(20))) # Creates label
+        self.labels[-1].grid(row=rowNum, column=0, columnspan=2) # Places label
         rowNum += 1
 
         altSkill = None
@@ -76,9 +77,26 @@ class TeamView(tk.Frame):
         self.awardBox.config(font=("Courier", 12))
 
         self.updateTournamentData()
+        self.updateAwardData()
 
     def updateBox(self, dataBox, data):
-        pass
+        colWidth = int(dataBox["width"] / len(data[0]))
+        
+        dataBox.delete(0, tk.END)  # Clears databox
+        row = ""
+        for header in data[0]:  # Adds headers to table
+            row += str(header).ljust(colWidth, " ")
+        dataBox.insert(tk.END, row)  # Inserts header row
+        dataBox.insert(tk.END, " ")  # Inserts empty row for spacing
+
+        for result in data[1:]:
+            row = ""
+            for record in result:  # Iterates though each column
+                if len(str(record)) <= colWidth:  # If the data fits in the space without wrapping
+                    row += str(record).ljust(colWidth, " ")  # Adds record with padding on right to fill space
+                else:
+                    row += str(record)[:colWidth - 1].ljust(colWidth, " ")
+            dataBox.insert(tk.END, row)  # Inserts row into table
 
     def goBack(self):
         for label in self.labels:
@@ -86,17 +104,30 @@ class TeamView(tk.Frame):
         self.controller.show_frame(self.controller.currentFrame)
 
     def updateAwardData(self):
-        pass
+        # Awaard Name, Competition Name, Season, Date
+        data = [["Award", "Competition Name", "Season", "Date"]]
+
+        results = api_query.get_awards("1591B")
+        for result in results:
+            eventData = event_management.get_event_data(result["sku"])
+            data.append([result["name"], eventData[1], eventData[4], eventData[5]])
+
+        self.updateBox(self.awardBox, data)
 
     def updateTournamentData(self):
         # Competition Name, Location, Data, Season, Qualifying Ranking, W-L-T, Autonomous Points, Max score, Contribution to Wins
-        columnHeads = ["EventName", "City", "Date", "Season"]
+        data = [["EventName", "City", "Date", "Season", "Qualifying Ranking", "W-L-T", "Autonomous Points", "Max score", "Contribution to wins"]]
         db = sqlite3.connect("database.db")
         c = db.cursor()
-        results = columnHeads + c.execute('SELECT EventName, City, Date, Season FROM tblEvents WHERE '
-                            '((RedTeam1 LIKE (?) OR RedTeam2 LIKE (?) OR BlueTeam1 LIKE (?) OR BlueTeam2 LIKE (?)))',
-                            (self.teamNum, self.teamNum, self.teamNum, self.teamNum)).fetchall()
+        results = c.execute("SELECT DISTINCT tM.EventID, EventName, City, Date, Season "
+                            "FROM tblEvents INNER JOIN tblMatches tM on tblEvents.EventID = tM.EventID "
+                            "WHERE (RedTeam1 =(?) OR RedTeam2 = (?) OR BlueTeam1 = (?) OR BlueTeam2 = (?)) "
+                            "ORDER BY Date DESC", (self.teamNum, self.teamNum, self.teamNum, self.teamNum)).fetchall()
 
-        print(results)
+        for result in results:
+            additionalData = api_query.get_event_results(result[0], self.teamNum)
+            data.append(list(result[1:]) +
+                        [additionalData["rank"], "{}-{}-{}".format(additionalData["wins"], additionalData["losses"], additionalData["ties"])
+                            , additionalData["ap"], additionalData["max_score"], additionalData["ccwm"]])
 
-        self.updateBox(self.tournamentBox, results)
+        self.updateBox(self.tournamentBox, data)

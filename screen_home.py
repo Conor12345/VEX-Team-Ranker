@@ -125,6 +125,17 @@ class Home(tk.Frame):
         self.beginButton = tk.Button(self.dataGrid, text="Begin analysis", font=global_variables.text(), command=self.runAlgorithm)
         self.beginButton.grid(row=9, column=0, columnspan=3)
 
+        self.teamViewGrid = tk.Frame(self.mainScreenGrid)
+        self.teamViewGrid.grid(row=4, column=0, columnspan=2)
+
+        teamViewLabel = tk.Label(self.teamViewGrid, text="Enter team number to view", font=global_variables.text())
+        teamViewLabel.grid(row=0, column=0)
+
+        self.teamViewBox = tk.Entry(self.teamViewGrid, font=global_variables.text(12))
+        self.teamViewBox.grid(row=1, column=0)
+
+        teamViewButton = tk.Button(self.teamViewGrid, text="View team details", font=global_variables.text(14), command=self.showTeamAlt)
+        teamViewButton.grid(row=2, column=0)
 
     def updateEventMenu(self, test):
         if self.currentSeasonVar.get() != "Choose season": # Ensures the user has selected a season
@@ -193,3 +204,9 @@ class Home(tk.Frame):
         teamNum = self.dataListbox.get(tk.ACTIVE)
         self.controller.teamDisplay = teamNum
         self.controller.show_team()
+
+    def showTeamAlt(self):
+        teamNum = self.teamViewBox.get().strip()
+        if team_management.check_team_presence(teamNum):
+            self.controller.teamDisplay = teamNum
+            self.controller.show_team()
