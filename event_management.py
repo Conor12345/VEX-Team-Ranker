@@ -75,3 +75,22 @@ def get_eventID(eventName):
         return False
     else:
         return results[0][0]
+
+
+def get_eventName(eventID):
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    results = c.execute("SELECT EventName FROM tblEvents WHERE EventID = (?)", (eventID,)).fetchall()
+    if len(results) == 0:
+        return False
+    else:
+        return results[0][0]
+
+def get_event_data(eventID):
+    db = sqlite3.connect("database.db")
+    c = db.cursor()
+    results = c.execute("SELECT * FROM tblEvents WHERE EventID = (?)", (eventID,)).fetchall()
+    if len(results) == 0:
+        return False
+    else:
+        return results[0]
