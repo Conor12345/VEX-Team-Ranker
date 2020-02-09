@@ -107,7 +107,7 @@ class TeamView(tk.Frame):
         # Awaard Name, Competition Name, Season, Date
         data = [["Award", "Competition Name", "Season", "Date"]]
 
-        results = api_query.get_awards("1591B")
+        results = api_query.get_awards(self.teamNum)
         for result in results:
             eventData = event_management.get_event_data(result["sku"])
             data.append([result["name"], eventData[1], eventData[4], eventData[5]])

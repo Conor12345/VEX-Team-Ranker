@@ -40,12 +40,14 @@ def get_awards(TeamNum):
     try:
         response = requests.get("https://api.vexdb.io/v1/get_awards?team=" + TeamNum)
         data = json.loads(response.text)
+        return data["result"]
     except:
         return False
-    return data["result"]
 
 def get_num_awards(TeamNum, Season):
-    return len(get_awards(TeamNum, Season))
+    response = requests.get("https://api.vexdb.io/v1/get_awards?team=" + TeamNum + "&season=" + Season + "&nodata=true")
+    data = json.loads(response.text)
+    return data["size"]
 
 def get_alt_skill(TeamNum, Season):
     try:
