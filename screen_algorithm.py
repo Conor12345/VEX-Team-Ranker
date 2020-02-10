@@ -69,7 +69,11 @@ class Algorithm(tk.Frame):
             for team in teams:
                 skillRating.append(self.teamDict[team][0])
 
-            probabilities = [(skillRating[0] + skillRating[1]) / sum(skillRating), (skillRating[2] + skillRating[3]) / sum(skillRating)]
+            if skillRating[0] == skillRating[1] == skillRating[2] == skillRating[3]:
+                probabilities = [0.5, 0.5]
+            else:
+                print(skillRating)
+                probabilities = [(skillRating[0] + skillRating[1]) / sum(skillRating), (skillRating[2] + skillRating[3]) / sum(skillRating)]
 
             if probabilities[0] == probabilities[1]:
                 expectedWinner = "Draw"
@@ -101,8 +105,10 @@ class Algorithm(tk.Frame):
                     self.teamDict[blueTeams][1][0] += 1
 
             if expectedWinner != actualWinner and actualWinner != "Draw" and expectedWinner != "Draw":
-                probabilities[0] = 1 / probabilities[0]
-                probabilities[1] = 1 / probabilities[1]
+                if probabilities[0] != 0:
+                    probabilities[0] = 1 / probabilities[0]
+                if probabilities[1] != 0:
+                    probabilities[1] = 1 / probabilities[1]
 
             scoreChanges[0] = scoreChanges[0] * probabilities[0] * roundNum
             scoreChanges[1] = scoreChanges[1] * probabilities[1] * roundNum
