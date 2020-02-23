@@ -55,6 +55,8 @@ class TeamView(tk.Frame):
         altSkill = None
         if self.controller.selectedSeason != "":
             altSkill = round(api_query.get_alt_skill(self.teamNum, self.controller.selectedSeason), 3)
+        else:
+            altSkill = round(api_query.get_alt_skill(self.teamNum, global_variables.currentSeason()), 3)
 
         self.labels.append(tk.Label(self, text="Alternate skill rating: {}".format(altSkill), font=global_variables.text(20)))
         self.labels[-1].grid(row=rowNum, column=0, columnspan=2)
