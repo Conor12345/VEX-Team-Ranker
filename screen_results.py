@@ -40,7 +40,7 @@ class Results(tk.Frame):
         self.showTeamButton = tk.Button(self, text="Show highlighted team details", font=global_variables.text(14), command=self.showTeamScreen)
         self.showTeamButton.grid(row=3, column=0)
 
-        self.compareSelectedButton = tk.Button(self, text="Compare selected teams", font=global_variables.text(14))
+        self.compareSelectedButton = tk.Button(self, text="Compare selected teams", font=global_variables.text(14), command=self.showCompareScreen  )
         self.compareSelectedButton.grid(row=4, column=0)
 
         self.fetchAwardDataButton = tk.Button(self, text="Collect award data", font=global_variables.text(14), command=self.fetchAwardData)
@@ -208,11 +208,11 @@ class Results(tk.Frame):
     def updateSelectedBox(self):
         self.storeButtonStates(False)
 
-        selectedForCompare = []
+        self.selectedForCompare = []
         for i in range(len(self.controller.buttonStates)):
             if self.controller.buttonStates[i] == 1:
                 if i < len(self.display): # Ensures there is a result to select
-                    selectedForCompare.append(self.display[i][0:2])
+                    self.selectedForCompare.append(self.display[i][0:2])
 
         self.selectedDataBox.delete(0, tk.END)  # Clears databox
         row = ""
@@ -221,7 +221,7 @@ class Results(tk.Frame):
         self.selectedDataBox.insert(tk.END, row)  # Inserts header row
         self.selectedDataBox.insert(tk.END, " ")  # Inserts empty row for spacing
 
-        for result in selectedForCompare:
+        for result in self.selectedForCompare:
             row = ""
             for record in result:  # Iterates though each column
                 if len(str(record)) <= 15:  # If the data fits in the space without wrapping
@@ -235,3 +235,7 @@ class Results(tk.Frame):
         if teamNum[0] != "R" and teamNum[0] != " ":
             self.controller.teamDisplay = teamNum[15:31].strip()
             self.controller.show_team()
+
+    def showCompareScreen(self):
+        print(self.selectedForCompare)
+        self.controller.show_compare()

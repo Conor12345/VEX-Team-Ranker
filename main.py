@@ -8,7 +8,7 @@ from screen_home import Home
 from screen_login import Login
 from screen_results import Results
 from screen_team import TeamView
-
+from screen_compare import Compare
 
 class Main(tk.Tk):
     def __init__(self):
@@ -36,7 +36,7 @@ class Main(tk.Tk):
         self.frames = {}
         self.currentFrame = Login
 
-        for F in [Login, Home, Database, Algorithm, Results, TeamView]:
+        for F in [Login, Home, Database, Algorithm, Results, TeamView, Compare]:
             frame = F(container, self)
 
             self.frames[F] = frame
@@ -72,6 +72,9 @@ class Main(tk.Tk):
 
     def show_team(self):
         self.show_frame(TeamView)
+
+    def show_compare(self):
+        self.show_frame(Compare)
 
 app = Main()
 app.state(pc_identifier.getType())
