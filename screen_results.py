@@ -237,5 +237,14 @@ class Results(tk.Frame):
             self.controller.show_team()
 
     def showCompareScreen(self):
-        print(self.selectedForCompare)
-        self.controller.show_compare()
+        if 2 <= len(self.selectedForCompare) <= 6:
+            self.controller.selectedForCompare = self.selectedForCompare
+            self.controller.show_compare()
+        else:
+            if len(self.selectedForCompare) > 6:
+                msg = "ERROR - Too many teams selected"
+            else:
+                msg = "ERROR - Too few teams selected"
+
+            errorLabel = tk.Label(self, text=msg, font=global_variables.text(12))
+            errorLabel.grid(row=8, column=0)

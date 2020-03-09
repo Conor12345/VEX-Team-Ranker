@@ -72,7 +72,6 @@ class Algorithm(tk.Frame):
             if skillRating[0] == skillRating[1] == skillRating[2] == skillRating[3]:
                 probabilities = [0.5, 0.5]
             else:
-                print(skillRating)
                 probabilities = [(skillRating[0] + skillRating[1]) / sum(skillRating), (skillRating[2] + skillRating[3]) / sum(skillRating)]
 
             if probabilities[0] == probabilities[1]:
