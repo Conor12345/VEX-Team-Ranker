@@ -1,4 +1,5 @@
 import json
+
 import requests
 
 
@@ -53,9 +54,9 @@ def get_alt_skill(TeamNum, Season):
     try:
         response = requests.get("https://api.vexdb.io/v1/get_season_rankings?team=" + TeamNum + "&season=" + Season)
         data = json.loads(response.text)
+        return data["result"][0]["vrating"]
     except:
         return False
-    return data["result"][0]["vrating"]
 
 def get_event_results(EventID, TeamNum):
     try:

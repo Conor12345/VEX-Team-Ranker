@@ -106,9 +106,8 @@ class Compare(tk.Frame):
     def goBack(self):
         for box in self.boxes:
             box.grid_forget()
-        self.controller.show_frame(self.controller.currentFrame)
+        self.controller.show_results()
 
     def showTeamView(self, teamNum):
-        print(teamNum, self.data[teamNum][0][1])
         self.controller.teamDisplay = self.data[teamNum][0][1]
         self.controller.show_team()
