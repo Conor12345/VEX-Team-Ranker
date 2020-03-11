@@ -74,6 +74,7 @@ class Main(tk.Tk):
         self.show_frame(TeamView)
 
     def show_compare(self):
+        self.currentFrame = Compare
         self.show_frame(Compare)
 
 app = Main()

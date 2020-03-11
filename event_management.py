@@ -101,4 +101,7 @@ def get_average_contribution_to_win(TeamNum, Season):
         temp = api_query.get_event_results(eventID, TeamNum)
         if temp != False:
             data.append(temp["ccwm"])
-    return sum(data) / len(data)
+    if len(data) > 0:
+        return round(sum(data) / len(data), 2)
+    else:
+        return 0
